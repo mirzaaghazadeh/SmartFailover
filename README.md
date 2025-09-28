@@ -1,8 +1,9 @@
 # Laravel SmartFailover 🚀
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/mirzaaghazadeh/smart-failover.svg?style=flat-square)](https://packagist.org/packages/mirzaaghazadeh/smart-failover)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg?style=flat-square)](https://php.net)
+[![Laravel Version](https://img.shields.io/badge/laravel-%5E9.0%7C%5E10.0%7C%5E11.0-red.svg?style=flat-square)](https://laravel.com)
 [![Total Downloads](https://img.shields.io/packagist/dt/mirzaaghazadeh/smart-failover.svg?style=flat-square)](https://packagist.org/packages/mirzaaghazadeh/smart-failover)
-[![License](https://img.shields.io/packagist/l/mirzaaghazadeh/smart-failover.svg?style=flat-square)](https://packagist.org/packages/mirzaaghazadeh/smart-failover)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 A comprehensive Laravel package that provides automatic failover for databases, caches, queues, and other critical services with intelligent routing and minimal code integration.
 

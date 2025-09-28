@@ -1,0 +1,68 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+    name: PHP CS Fixer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip
+          tools: php-cs-fixer
+
+      - name: Run PHP CS Fixer
+        run: php-cs-fixer fix --dry-run --diff --verbose
+
+  phpstan:
+    runs-on: ubuntu-latest
+    name: PHPStan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip
+          tools: phpstan
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Run PHPStan
+        run: phpstan analyse --memory-limit=2G
+
+  psalm:
+    runs-on: ubuntu-latest
+    name: Psalm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip
+          tools: psalm
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Run Psalm
+        run: psalm --output-format=github

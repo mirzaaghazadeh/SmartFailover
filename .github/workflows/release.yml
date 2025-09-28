@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Create Release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Get tag name
+        id: tag
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          # Extract changelog for current version
+          if [ -f CHANGELOG.md ]; then
+            # Get content between current version and next version or end of file
+            awk '/^## \[?'${GITHUB_REF#refs/tags/v}'\]?/{flag=1; next} /^## \[?[0-9]/{flag=0} flag' CHANGELOG.md > release_notes.md
+            if [ ! -s release_notes.md ]; then
+              echo "No changelog found for version ${GITHUB_REF#refs/tags/v}" > release_notes.md
+            fi
+          else
+            echo "Release ${GITHUB_REF#refs/tags/}" > release_notes.md
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Release ${{ steps.tag.outputs.tag }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(steps.tag.outputs.tag, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  packagist:
+    runs-on: ubuntu-latest
+    name: Update Packagist
+    needs: release
+
+    steps:
+      - name: Update Packagist
+        run: |
+          curl -XPOST -H'content-type:application/json' \
+            'https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}' \
+            -d'{"repository":{"url":"https://github.com/${{ github.repository }}"}}'
