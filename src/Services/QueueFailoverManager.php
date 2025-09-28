@@ -2,10 +2,11 @@
 
 namespace MirzaAghazadeh\SmartFailover\Services;
 
-use Illuminate\Queue\QueueManager;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Contracts\Config\Repository as Config;
 use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Carbon;
+use Illuminate\Queue\QueueManager;
 use Closure;
 
 class QueueFailoverManager
@@ -195,7 +196,7 @@ class QueueFailoverManager
                     'status' => 'healthy',
                     'queue_size' => $size,
                     'response_time_ms' => round($responseTime, 2),
-                    'checked_at' => now()->toISOString(),
+                    'checked_at' => Carbon::now()->toISOString(),
                 ];
 
                 $this->healthStatus[$connection] = true;
@@ -204,7 +205,7 @@ class QueueFailoverManager
                     'connection' => $connection,
                     'status' => 'unhealthy',
                     'error' => $e->getMessage(),
-                    'checked_at' => now()->toISOString(),
+                    'checked_at' => Carbon::now()->toISOString(),
                 ];
 
                 $this->healthStatus[$connection] = false;

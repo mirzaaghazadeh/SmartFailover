@@ -2,10 +2,11 @@
 
 namespace MirzaAghazadeh\SmartFailover\Services;
 
-use Illuminate\Cache\CacheManager;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Carbon;
+use Illuminate\Cache\CacheManager;
 use Closure;
 
 class CacheFailoverManager
@@ -222,7 +223,7 @@ class CacheFailoverManager
                         'store' => $store,
                         'status' => 'healthy',
                         'response_time_ms' => round($responseTime, 2),
-                        'checked_at' => now()->toISOString(),
+                        'checked_at' => Carbon::now()->toISOString(),
                     ];
 
                     $this->healthStatus[$store] = true;
@@ -234,7 +235,7 @@ class CacheFailoverManager
                     'store' => $store,
                     'status' => 'unhealthy',
                     'error' => $e->getMessage(),
-                    'checked_at' => now()->toISOString(),
+                    'checked_at' => Carbon::now()->toISOString(),
                 ];
 
                 $this->healthStatus[$store] = false;

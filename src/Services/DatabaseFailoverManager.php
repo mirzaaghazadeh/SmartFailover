@@ -2,12 +2,13 @@
 
 namespace MirzaAghazadeh\SmartFailover\Services;
 
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Config\Repository as Config;
 use Psr\Log\LoggerInterface;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Closure;
 
 class DatabaseFailoverManager
@@ -52,7 +53,7 @@ class DatabaseFailoverManager
         // Try primary connection first
         try {
             return $this->executeWithConnection($callback, $primaryConnection);
-        } catch (QueryException $e) {
+        } catch (QueryException|\Exception $e) {
             $this->logger->warning('Primary database connection failed', [
                 'connection' => $primaryConnection,
                 'error' => $e->getMessage(),
@@ -156,7 +157,7 @@ class DatabaseFailoverManager
                     'connection' => $connection,
                     'status' => 'healthy',
                     'response_time_ms' => round($responseTime, 2),
-                    'checked_at' => now()->toISOString(),
+                    'checked_at' => Carbon::now()->toISOString(),
                 ];
 
                 $this->healthStatus[$connection] = true;
@@ -165,7 +166,7 @@ class DatabaseFailoverManager
                     'connection' => $connection,
                     'status' => 'unhealthy',
                     'error' => $e->getMessage(),
-                    'checked_at' => now()->toISOString(),
+                    'checked_at' => Carbon::now()->toISOString(),
                 ];
 
                 $this->healthStatus[$connection] = false;
