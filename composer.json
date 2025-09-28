@@ -1,0 +1,64 @@
+{
+    "name": "mirzaaghazadeh/smart-failover",
+    "description": "A comprehensive Laravel package for automatic failover handling across databases, caches, queues, and other services with intelligent routing and minimal code integration.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Navid Mirzaaghazadeh",
+            "email": "Hi@Navid.tr"
+        }
+    ],
+    "keywords": [
+        "laravel",
+        "failover",
+        "database",
+        "cache",
+        "queue",
+        "redundancy",
+        "high-availability",
+        "smart-routing"
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^9.0|^10.0|^11.0",
+        "illuminate/database": "^9.0|^10.0|^11.0",
+        "illuminate/cache": "^9.0|^10.0|^11.0",
+        "illuminate/queue": "^9.0|^10.0|^11.0",
+        "illuminate/log": "^9.0|^10.0|^11.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0|^10.0",
+        "orchestra/testbench": "^7.0|^8.0|^9.0",
+        "mockery/mockery": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "MirzaAghazadeh\\SmartFailover\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MirzaAghazadeh\\SmartFailover\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MirzaAghazadeh\\SmartFailover\\SmartFailoverServiceProvider"
+            ],
+            "aliases": {
+                "SmartFailover": "MirzaAghazadeh\\SmartFailover\\Facades\\SmartFailover"
+            }
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
