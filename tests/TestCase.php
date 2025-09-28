@@ -1,8 +1,8 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Tests;
+namespace Mirzaaghazadeh\SmartFailover\Tests;
 
-use MirzaAghazadeh\SmartFailover\SmartFailoverServiceProvider;
+use Mirzaaghazadeh\SmartFailover\SmartFailoverServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -94,7 +94,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageAliases($app): array
     {
         return [
-            'SmartFailover' => \MirzaAghazadeh\SmartFailover\Facades\SmartFailover::class,
+            'SmartFailover' => \Mirzaaghazadeh\SmartFailover\Facades\SmartFailover::class,
         ];
     }
 }

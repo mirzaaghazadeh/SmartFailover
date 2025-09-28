@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg?style=flat-square)](https://php.net)
 [![Laravel Version](https://img.shields.io/badge/laravel-%5E9.0%7C%5E10.0%7C%5E11.0-red.svg?style=flat-square)](https://laravel.com)
-[![Total Downloads](https://img.shields.io/packagist/dt/mirzaaghazadeh/smart-failover.svg?style=flat-square)](https://packagist.org/packages/mirzaaghazadeh/smart-failover)
+[![Total Downloads](https://img.shields.io/packagist/dt/Mirzaaghazadeh/smart-failover.svg?style=flat-square)](https://packagist.org/packages/Mirzaaghazadeh/smart-failover)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 A comprehensive Laravel package that provides automatic failover for databases, caches, queues, and other critical services with intelligent routing and minimal code integration.
@@ -43,19 +43,19 @@ Most Laravel applications rely on single database, cache, or queue drivers. When
 Install the package via Composer:
 
 ```bash
-composer require mirzaaghazadeh/smart-failover
+composer require Mirzaaghazadeh/smart-failover
 ```
 
 Publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="MirzaAghazadeh\SmartFailover\SmartFailoverServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Mirzaaghazadeh\SmartFailover\SmartFailoverServiceProvider" --tag="config"
 ```
 
 Publish the migration files (optional):
 
 ```bash
-php artisan vendor:publish --provider="MirzaAghazadeh\SmartFailover\SmartFailoverServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="Mirzaaghazadeh\SmartFailover\SmartFailoverServiceProvider" --tag="migrations"
 ```
 
 ## ⚙️ Configuration
@@ -106,7 +106,7 @@ return [
 The most common usage pattern with the fluent API:
 
 ```php
-use MirzaAghazadeh\SmartFailover\Facades\SmartFailover;
+use Mirzaaghazadeh\SmartFailover\Facades\SmartFailover;
 
 // Database, Cache, and Queue failover in one call
 SmartFailover::db('mysql_primary', ['mysql_backup'])
@@ -125,7 +125,7 @@ SmartFailover::db('mysql_primary', ['mysql_backup'])
 ### Database Failover
 
 ```php
-use MirzaAghazadeh\SmartFailover\Facades\SmartFailover;
+use Mirzaaghazadeh\SmartFailover\Facades\SmartFailover;
 
 // Simple database failover
 SmartFailover::db('mysql_primary', ['mysql_backup'])
@@ -184,7 +184,7 @@ $queueManager->push(new ProcessOrderJob($order));
 ### Mail Failover
 
 ```php
-use MirzaAghazadeh\SmartFailover\Services\MailFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\MailFailoverManager;
 
 $mailManager = app(MailFailoverManager::class);
 $mailManager->setMailers('ses', ['smtp', 'mailgun']);
@@ -199,7 +199,7 @@ $mailManager->queue(new NewsletterEmail($subscribers));
 ### Storage Failover
 
 ```php
-use MirzaAghazadeh\SmartFailover\Services\StorageFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\StorageFailoverManager;
 
 $storageManager = app(StorageFailoverManager::class);
 $storageManager->setDisks('s3', ['local', 'backup_s3']);
@@ -347,7 +347,7 @@ Configure notifications for service failures:
 ### Custom Health Checks
 
 ```php
-use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
+use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
 
 $healthManager = app(HealthCheckManager::class);
 
@@ -401,7 +401,7 @@ SmartFailover::cache('redis', ['memcached'])
 
 ```php
 // In your Nova dashboard
-use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
+use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
 
 public function cards(Request $request)
 {
@@ -418,7 +418,7 @@ public function cards(Request $request)
 
 ```php
 // In your Filament widget
-use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
+use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
 
 protected function getStats(): array
 {
@@ -515,7 +515,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 **Navid Mirzaaghazadeh**
 - Email: hi@navid.tr
-- GitHub: [@mirzaaghazadeh](https://github.com/mirzaaghazadeh)
+- GitHub: [@Mirzaaghazadeh](https://github.com/Mirzaaghazadeh)
 
 ## 🙏 Acknowledgments
 

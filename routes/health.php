@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use MirzaAghazadeh\SmartFailover\Http\Controllers\HealthController;
+use Mirzaaghazadeh\SmartFailover\Http\Controllers\HealthController;
 
 /*
 |--------------------------------------------------------------------------

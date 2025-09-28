@@ -1,5 +1,5 @@
 {
-    "name": "mirzaaghazadeh/smart-failover",
+    "name": "Mirzaaghazadeh/smart-failover",
     "description": "A comprehensive Laravel package for automatic failover handling across databases, caches, queues, and other services with intelligent routing and minimal code integration.",
     "type": "library",
     "license": "MIT",
@@ -36,21 +36,21 @@
     },
     "autoload": {
         "psr-4": {
-            "MirzaAghazadeh\\SmartFailover\\": "src/"
+            "Mirzaaghazadeh\\SmartFailover\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MirzaAghazadeh\\SmartFailover\\Tests\\": "tests/"
+            "Mirzaaghazadeh\\SmartFailover\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "MirzaAghazadeh\\SmartFailover\\SmartFailoverServiceProvider"
+                "Mirzaaghazadeh\\SmartFailover\\SmartFailoverServiceProvider"
             ],
             "aliases": {
-                "SmartFailover": "MirzaAghazadeh\\SmartFailover\\Facades\\SmartFailover"
+                "SmartFailover": "Mirzaaghazadeh\\SmartFailover\\Facades\\SmartFailover"
             }
         }
     },
