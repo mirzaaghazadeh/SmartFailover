@@ -3,11 +3,11 @@
 namespace MirzaAghazadeh\SmartFailover\Console\Commands;
 
 use Illuminate\Console\Command;
-use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
-use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
 use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
 use MirzaAghazadeh\SmartFailover\Services\MailFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
 use MirzaAghazadeh\SmartFailover\Services\StorageFailoverManager;
 
 class HealthCheckCommand extends Command
@@ -46,7 +46,7 @@ class HealthCheckCommand extends Command
             if ($service) {
                 $health = $this->checkSpecificService($service);
             } else {
-                $health = $detailed 
+                $health = $detailed
                     ? $this->healthManager->checkAll()
                     : $this->healthManager->getHealthResponse();
             }
@@ -57,7 +57,7 @@ class HealthCheckCommand extends Command
             }
 
             $this->displayHealth($health, $detailed);
-            
+
             // Return appropriate exit code
             return match ($health['status'] ?? 'unknown') {
                 'healthy' => 0,
@@ -73,7 +73,7 @@ class HealthCheckCommand extends Command
     }
 
     /**
-     * Check specific service health
+     * Check specific service health.
      */
     protected function checkSpecificService(string $service): array
     {
@@ -103,19 +103,19 @@ class HealthCheckCommand extends Command
     }
 
     /**
-     * Display health information
+     * Display health information.
      */
     protected function displayHealth(array $health, bool $detailed = false): void
     {
         $status = $health['status'] ?? 'unknown';
-        
+
         // Display overall status
         $this->displayStatus('Overall Status', $status);
-        
+
         if (isset($health['services'])) {
             $this->newLine();
             $this->line('<comment>Service Health:</comment>');
-            
+
             foreach ($health['services'] as $serviceName => $serviceHealth) {
                 $this->displayServiceHealth($serviceName, $serviceHealth, $detailed);
             }
@@ -132,30 +132,30 @@ class HealthCheckCommand extends Command
     }
 
     /**
-     * Display service health
+     * Display service health.
      */
     protected function displayServiceHealth(string $serviceName, array $serviceHealth, bool $detailed): void
     {
         $this->newLine();
         $this->line("<info>{$serviceName}:</info>");
-        
+
         foreach ($serviceHealth as $instanceName => $instanceHealth) {
             $status = $instanceHealth['status'] ?? 'unknown';
             $responseTime = $instanceHealth['response_time'] ?? 'N/A';
-            
+
             $statusColor = match ($status) {
                 'healthy' => 'green',
                 'degraded' => 'yellow',
                 'unhealthy' => 'red',
                 default => 'gray',
             };
-            
+
             $this->line("  <fg={$statusColor}>●</fg> {$instanceName}: <fg={$statusColor}>{$status}</fg> ({$responseTime}ms)");
-            
+
             if ($detailed && isset($instanceHealth['error'])) {
                 $this->line("    <fg=red>Error:</fg> {$instanceHealth['error']}");
             }
-            
+
             if ($detailed && isset($instanceHealth['last_checked'])) {
                 $this->line("    <fg=gray>Last checked:</fg> {$instanceHealth['last_checked']}");
             }
@@ -163,7 +163,7 @@ class HealthCheckCommand extends Command
     }
 
     /**
-     * Display status with appropriate color
+     * Display status with appropriate color.
      */
     protected function displayStatus(string $label, string $status): void
     {
@@ -173,40 +173,40 @@ class HealthCheckCommand extends Command
             'unhealthy' => 'red',
             default => 'gray',
         };
-        
+
         $statusIcon = match ($status) {
             'healthy' => '✓',
             'degraded' => '⚠',
             'unhealthy' => '✗',
             default => '?',
         };
-        
+
         $this->line("<info>{$label}:</info> <fg={$statusColor}>{$statusIcon} {$status}</fg>");
     }
 
     /**
-     * Display summary information
+     * Display summary information.
      */
     protected function displaySummary(array $summary): void
     {
         $this->line('<comment>Summary:</comment>');
-        
+
         if (isset($summary['total_services'])) {
             $this->line("  Total services: {$summary['total_services']}");
         }
-        
+
         if (isset($summary['healthy_services'])) {
             $this->line("  <fg=green>Healthy:</fg> {$summary['healthy_services']}");
         }
-        
+
         if (isset($summary['degraded_services'])) {
             $this->line("  <fg=yellow>Degraded:</fg> {$summary['degraded_services']}");
         }
-        
+
         if (isset($summary['unhealthy_services'])) {
             $this->line("  <fg=red>Unhealthy:</fg> {$summary['unhealthy_services']}");
         }
-        
+
         if (isset($summary['average_response_time'])) {
             $this->line("  Average response time: {$summary['average_response_time']}ms");
         }

@@ -2,12 +2,11 @@
 
 namespace MirzaAghazadeh\SmartFailover\Services;
 
-use Illuminate\Contracts\Config\Repository as Config;
-use Psr\Log\LoggerInterface;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Carbon;
-use Illuminate\Cache\CacheManager;
 use Closure;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Psr\Log\LoggerInterface;
 
 class CacheFailoverManager
 {
@@ -27,7 +26,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Set cache stores for failover
+     * Set cache stores for failover.
      */
     public function setStores(array $stores): void
     {
@@ -35,12 +34,12 @@ class CacheFailoverManager
     }
 
     /**
-     * Execute cache operation with failover
+     * Execute cache operation with failover.
      */
     public function execute(Closure $callback, array $stores = null): mixed
     {
         $stores = $stores ?? $this->stores;
-        
+
         if (empty($stores['primary'])) {
             throw new \InvalidArgumentException('Primary cache store must be specified');
         }
@@ -82,7 +81,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Execute callback with specific cache store
+     * Execute callback with specific cache store.
      */
     protected function executeWithStore(Closure $callback, string $store): mixed
     {
@@ -95,14 +94,14 @@ class CacheFailoverManager
                 return $callback(Cache::store($store));
             } catch (\Exception $e) {
                 $attempts++;
-                
+
                 if ($attempts >= $maxAttempts) {
                     throw $e;
                 }
 
                 // Wait before retry
                 usleep($this->retryDelay * 1000);
-                
+
                 $this->logger->debug('Retrying cache operation', [
                     'store' => $store,
                     'attempt' => $attempts,
@@ -115,7 +114,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Handle cache miss gracefully
+     * Handle cache miss gracefully.
      */
     protected function handleCacheMiss(\Exception $primaryException, \Exception $fallbackException = null): mixed
     {
@@ -129,7 +128,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Get cache value with failover
+     * Get cache value with failover.
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -139,7 +138,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Put cache value with failover
+     * Put cache value with failover.
      */
     public function put(string $key, mixed $value, int $ttl = null): bool
     {
@@ -157,7 +156,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Remember cache value with failover
+     * Remember cache value with failover.
      */
     public function remember(string $key, int $ttl, Closure $callback): mixed
     {
@@ -170,14 +169,14 @@ class CacheFailoverManager
                 'key' => $key,
                 'error' => $e->getMessage(),
             ]);
-            
+
             // If cache fails, execute callback directly
             return $callback();
         }
     }
 
     /**
-     * Forget cache value with failover
+     * Forget cache value with failover.
      */
     public function forget(string $key): bool
     {
@@ -195,7 +194,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Check health of cache stores
+     * Check health of cache stores.
      */
     public function checkHealth(array $stores = null): array
     {
@@ -211,11 +210,11 @@ class CacheFailoverManager
                 $startTime = microtime(true);
                 $testKey = 'smart_failover_health_check_' . time();
                 $testValue = 'test';
-                
+
                 Cache::store($store)->put($testKey, $testValue, 60);
                 $retrieved = Cache::store($store)->get($testKey);
                 Cache::store($store)->forget($testKey);
-                
+
                 $responseTime = (microtime(true) - $startTime) * 1000;
 
                 if ($retrieved === $testValue) {
@@ -246,7 +245,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Check if a specific store is healthy
+     * Check if a specific store is healthy.
      */
     public function isStoreHealthy(string $store): bool
     {
@@ -254,7 +253,7 @@ class CacheFailoverManager
     }
 
     /**
-     * Get current health status
+     * Get current health status.
      */
     public function getHealthStatus(): array
     {

@@ -2,8 +2,8 @@
 
 namespace MirzaAghazadeh\SmartFailover\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use MirzaAghazadeh\SmartFailover\SmartFailoverServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {

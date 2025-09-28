@@ -28,9 +28,10 @@
         "illuminate/log": "^9.0|^10.0|^11.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0|^10.0",
+        "friendsofphp/php-cs-fixer": "^3.88",
+        "mockery/mockery": "^1.4",
         "orchestra/testbench": "^7.0|^8.0|^9.0",
-        "mockery/mockery": "^1.4"
+        "phpunit/phpunit": "^9.0|^10.0"
     },
     "autoload": {
         "psr-4": {
