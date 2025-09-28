@@ -1,0 +1,15 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        # Ignore Laravel facade errors
+        - '#Call to an undefined method Illuminate\\.*#'
+        # Ignore dynamic property access
+        - '#Access to an undefined property#'
+    reportUnmatchedIgnoredErrors: false
+    tmpDir: build/phpstan
+    
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
