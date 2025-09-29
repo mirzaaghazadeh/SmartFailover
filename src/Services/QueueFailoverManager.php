@@ -255,7 +255,7 @@ class QueueFailoverManager
     public function retryFailedJobs(array $jobIds = []): bool
     {
         try {
-            return $this->execute(function ($queueConnection) use ($jobIds) {
+            return $this->execute(function ($queueConnection) {
                 // Implementation would depend on queue driver
                 // This is a placeholder for the retry logic
                 return true;

@@ -42,6 +42,11 @@ class TestFailoverCommand extends Command
         $primary = $this->option('primary');
         $fallback = $this->option('fallback');
 
+        if (!is_string($service)) {
+            $this->error('Service argument must be a string');
+            return 1;
+        }
+
         $this->info("Testing SmartFailover for service: {$service}");
 
         if ($simulateFailure) {
@@ -54,7 +59,10 @@ class TestFailoverCommand extends Command
                 'cache' => $this->testCache($primary, $fallback, $simulateFailure),
                 'queue' => $this->testQueue($primary, $fallback, $simulateFailure),
                 'all' => $this->testAll($simulateFailure),
-                default => $this->error("Unknown service: {$service}") ?: 1,
+                default => (function() use ($service) {
+                    $this->error("Unknown service: {$service}");
+                    return 1;
+                })(),
             };
         } catch (\Exception $e) {
             $this->error('Test failed: ' . $e->getMessage());
@@ -78,8 +86,8 @@ class TestFailoverCommand extends Command
         try {
             // Test basic connection
             $this->smartFailover
-                ->db($primary, [$fallback])
-                ->execute(function () {
+                ->db($primary, is_array($fallback) ? $fallback[0] : $fallback)
+                ->send(function () {
                     return \DB::select('SELECT 1 as test');
                 });
 
@@ -122,8 +130,8 @@ class TestFailoverCommand extends Command
 
             // Test cache operations
             $this->smartFailover
-                ->cache($primary, [$fallback])
-                ->execute(function () use ($testKey, $testValue) {
+                ->cache($primary, is_array($fallback) ? $fallback[0] : $fallback)
+                ->send(function () use ($testKey, $testValue) {
                     \Cache::put($testKey, $testValue, 60);
                     return \Cache::get($testKey);
                 });
@@ -167,8 +175,8 @@ class TestFailoverCommand extends Command
         try {
             // Test queue operations
             $this->smartFailover
-                ->queue($primary, [$fallback])
-                ->execute(function () {
+                ->queue($primary, is_array($fallback) ? $fallback[0] : $fallback)
+                ->send(function () {
                     // Create a simple test job
                     $job = new class () {
                         public function handle()

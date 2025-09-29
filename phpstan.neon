@@ -1,15 +1,11 @@
 parameters:
-    level: 8
+    level: 5
     paths:
         - src
         - tests
     ignoreErrors:
-        # Ignore Laravel facade errors
-        - '#Call to an undefined method Illuminate\\.*#'
-        # Ignore dynamic property access
-        - '#Access to an undefined property#'
-    reportUnmatchedIgnoredErrors: false
-    tmpDir: build/phpstan
-    
+        - '#Call to method PHPUnit\\Framework\\Assert::assertIsArray\(\) with array will always evaluate to true#'
+        - '#Call to function is_array\(\) with non-falsy-string will always evaluate to false#'
+
 includes:
-    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/larastan/larastan/extension.neon

@@ -43,7 +43,7 @@ class HealthCheckCommand extends Command
         $json = $this->option('json');
 
         try {
-            if ($service) {
+            if ($service && is_string($service)) {
                 $health = $this->checkSpecificService($service);
             } else {
                 $health = $detailed
@@ -52,11 +52,14 @@ class HealthCheckCommand extends Command
             }
 
             if ($json) {
-                $this->line(json_encode($health, JSON_PRETTY_PRINT));
+                $jsonOutput = json_encode($health, JSON_PRETTY_PRINT);
+                if ($jsonOutput !== false) {
+                    $this->line($jsonOutput);
+                }
                 return 0;
             }
 
-            $this->displayHealth($health, $detailed);
+            $this->displayHealth($health, is_bool($detailed) ? $detailed : false);
 
             // Return appropriate exit code
             return match ($health['status'] ?? 'unknown') {
@@ -74,6 +77,8 @@ class HealthCheckCommand extends Command
 
     /**
      * Check specific service health.
+     *
+     * @return array<string, mixed>
      */
     protected function checkSpecificService(string $service): array
     {
@@ -104,6 +109,8 @@ class HealthCheckCommand extends Command
 
     /**
      * Display health information.
+     *
+     * @param array<string, mixed> $health
      */
     protected function displayHealth(array $health, bool $detailed = false): void
     {
@@ -133,6 +140,8 @@ class HealthCheckCommand extends Command
 
     /**
      * Display service health.
+     *
+     * @param array<string, mixed> $serviceHealth
      */
     protected function displayServiceHealth(string $serviceName, array $serviceHealth, bool $detailed): void
     {
@@ -186,6 +195,8 @@ class HealthCheckCommand extends Command
 
     /**
      * Display summary information.
+     *
+     * @param array<string, mixed> $summary
      */
     protected function displaySummary(array $summary): void
     {

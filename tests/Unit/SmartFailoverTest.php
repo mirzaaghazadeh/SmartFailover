@@ -16,7 +16,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_configure_database_failover()
+    public function it_can_configure_database_failover(): void
     {
         $result = $this->smartFailover->db('mysql_primary', 'mysql_backup');
 
@@ -24,7 +24,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_configure_cache_failover()
+    public function it_can_configure_cache_failover(): void
     {
         $result = $this->smartFailover->cache('redis', 'memcached');
 
@@ -32,7 +32,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_configure_queue_failover()
+    public function it_can_configure_queue_failover(): void
     {
         $result = $this->smartFailover->queue('sqs', 'redis');
 
@@ -40,7 +40,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_chain_multiple_configurations()
+    public function it_can_chain_multiple_configurations(): void
     {
         $result = $this->smartFailover
             ->db('mysql_primary', 'mysql_backup')
@@ -51,7 +51,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_execute_operations_with_send_method()
+    public function it_can_execute_callback(): void
     {
         $executed = false;
 
@@ -64,7 +64,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_health_status()
+    public function it_can_get_health_status(): void
     {
         $health = $this->smartFailover->health();
 
@@ -73,7 +73,7 @@ class SmartFailoverTest extends TestCase
     }
 
     /** @test */
-    public function it_can_reset_configuration()
+    public function it_can_reset_configuration(): void
     {
         $this->smartFailover
             ->db('mysql_primary', 'mysql_backup')
