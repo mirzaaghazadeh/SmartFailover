@@ -46,8 +46,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:^10.0" "orchestra/testbench:^8.0" --no-interaction --no-update --dev
-          composer update --prefer-stable --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update --dev
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
@@ -72,8 +72,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update --dev
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer require "laravel/framework:^10.0" "orchestra/testbench:^8.0" --no-interaction --no-update --dev
+          composer update --prefer-stable --prefer-dist --no-interaction
 
       - name: Execute tests with coverage
         run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
