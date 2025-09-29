@@ -20,10 +20,12 @@ jobs:
         with:
           php-version: 8.2
           extensions: dom, curl, libxml, mbstring, zip
-          tools: php-cs-fixer
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction
 
       - name: Run PHP CS Fixer
-        run: php-cs-fixer fix --dry-run --diff --verbose
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
 
   phpstan:
     runs-on: ubuntu-latest
@@ -38,13 +40,12 @@ jobs:
         with:
           php-version: 8.2
           extensions: dom, curl, libxml, mbstring, zip
-          tools: phpstan
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
 
       - name: Run PHPStan
-        run: phpstan analyse --memory-limit=2G
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G
 
   psalm:
     runs-on: ubuntu-latest
@@ -59,10 +60,9 @@ jobs:
         with:
           php-version: 8.2
           extensions: dom, curl, libxml, mbstring, zip
-          tools: psalm
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
 
       - name: Run Psalm
-        run: psalm --output-format=github
+        run: ./vendor/bin/psalm --output-format=github
