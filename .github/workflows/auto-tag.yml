@@ -22,64 +22,84 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install semantic-release
+      - name: Configure Git
         run: |
-          npm install -g semantic-release
-          npm install -g @semantic-release/changelog
-          npm install -g @semantic-release/git
-          npm install -g @semantic-release/github
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create .releaserc.json
-        run: |
-          cat > .releaserc.json << 'EOF'
-          {
-            "branches": ["main"],
-            "plugins": [
-              "@semantic-release/commit-analyzer",
-              "@semantic-release/release-notes-generator",
-              [
-                "@semantic-release/changelog",
-                {
-                  "changelogFile": "CHANGELOG.md"
-                }
-              ],
-              [
-                "@semantic-release/git",
-                {
-                  "assets": ["CHANGELOG.md"],
-                  "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-                }
-              ],
-              "@semantic-release/github"
-            ]
-          }
-          EOF
-
-      - name: Run semantic-release
+      - name: Get next version and create tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Check if semantic-release would create a release
-          if semantic-release --dry-run | grep -q "There is no previous release"; then
-            echo "No previous release found, proceeding with semantic-release"
-            semantic-release
-          elif semantic-release --dry-run | grep -q "no release"; then
-            echo "No release needed based on commits"
-          else
-            # Run semantic-release and handle tag conflicts gracefully
-            semantic-release || {
-              exit_code=$?
-              if [ $exit_code -eq 1 ]; then
-                echo "Semantic-release completed with warnings or no release needed"
-                exit 0
+          # Function to get the next version
+          get_next_version() {
+            # Get all existing tags that match semantic versioning pattern
+            existing_tags=$(git tag -l | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
+            
+            if [ -z "$existing_tags" ]; then
+              echo "1.0.0"
+              return
+            fi
+            
+            # Get the latest tag
+            latest_tag=$(echo "$existing_tags" | tail -n 1)
+            
+            # Remove 'v' prefix if present
+            latest_version=${latest_tag#v}
+            
+            # Split version into major.minor.patch
+            IFS='.' read -r major minor patch <<< "$latest_version"
+            
+            # Increment patch version
+            if [ "$patch" -lt 99 ]; then
+              patch=$((patch + 1))
+            else
+              # Reset patch to 0 and increment minor
+              patch=0
+              if [ "$minor" -lt 99 ]; then
+                minor=$((minor + 1))
               else
-                echo "Semantic-release failed with exit code $exit_code"
-                exit $exit_code
+                # Reset minor to 0 and increment major
+                minor=0
+                major=$((major + 1))
               fi
-            }
+            fi
+            
+            echo "${major}.${minor}.${patch}"
+          }
+          
+          # Check if there are any commits since last tag
+          if git describe --tags --exact-match HEAD 2>/dev/null; then
+            echo "Current commit is already tagged, skipping..."
+            exit 0
           fi
+          
+          # Get the last tag
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -n "$last_tag" ]; then
+            # Check if there are commits since last tag
+            commits_since_tag=$(git rev-list ${last_tag}..HEAD --count)
+            if [ "$commits_since_tag" -eq 0 ]; then
+              echo "No commits since last tag, skipping..."
+              exit 0
+            fi
+          fi
+          
+          # Get next version
+          next_version=$(get_next_version)
+          tag_name="v${next_version}"
+          
+          echo "Creating tag: $tag_name"
+          
+          # Create and push the tag
+          git tag "$tag_name"
+          git push origin "$tag_name"
+          
+          echo "Successfully created and pushed tag: $tag_name"
+          
+          # Create a GitHub release
+          gh release create "$tag_name" \
+            --title "Release $tag_name" \
+            --notes "Automated release $tag_name" \
+            --generate-notes

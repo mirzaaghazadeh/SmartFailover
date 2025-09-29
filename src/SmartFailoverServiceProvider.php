@@ -1,13 +1,13 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover;
+namespace Mirzaaghazadeh\SmartFailover;
 
 use Illuminate\Support\ServiceProvider;
-use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
-use MirzaAghazadeh\SmartFailover\Services\NotificationManager;
-use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
+use Mirzaaghazadeh\SmartFailover\Services\NotificationManager;
+use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
 
 class SmartFailoverServiceProvider extends ServiceProvider
 {

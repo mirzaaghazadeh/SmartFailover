@@ -1,9 +1,9 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Tests\Unit;
+namespace Mirzaaghazadeh\SmartFailover\Tests\Unit;
 
-use MirzaAghazadeh\SmartFailover\SmartFailover;
-use MirzaAghazadeh\SmartFailover\Tests\TestCase;
+use Mirzaaghazadeh\SmartFailover\SmartFailover;
+use Mirzaaghazadeh\SmartFailover\Tests\TestCase;
 
 class SmartFailoverTest extends TestCase
 {
