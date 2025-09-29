@@ -1,6 +1,6 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Facades;
+namespace Mirzaaghazadeh\SmartFailover\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

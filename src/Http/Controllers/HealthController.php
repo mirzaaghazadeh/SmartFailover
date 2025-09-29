@@ -1,14 +1,14 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Http\Controllers;
+namespace Mirzaaghazadeh\SmartFailover\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
-use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
-use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
+use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
 
 class HealthController extends Controller
 {

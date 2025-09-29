@@ -1,6 +1,6 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Services;
+namespace Mirzaaghazadeh\SmartFailover\Services;
 
 use Closure;
 use Illuminate\Contracts\Config\Repository as Config;

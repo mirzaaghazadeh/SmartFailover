@@ -1,6 +1,6 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Services;
+namespace Mirzaaghazadeh\SmartFailover\Services;
 
 use Exception;
 use Illuminate\Contracts\Config\Repository as Config;

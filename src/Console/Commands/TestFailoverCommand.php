@@ -1,12 +1,12 @@
 <?php
 
-namespace MirzaAghazadeh\SmartFailover\Console\Commands;
+namespace Mirzaaghazadeh\SmartFailover\Console\Commands;
 
 use Illuminate\Console\Command;
-use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
-use MirzaAghazadeh\SmartFailover\SmartFailover;
+use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
+use Mirzaaghazadeh\SmartFailover\SmartFailover;
 
 class TestFailoverCommand extends Command
 {
