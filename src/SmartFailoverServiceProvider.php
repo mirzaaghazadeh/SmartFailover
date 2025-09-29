@@ -67,7 +67,6 @@ class SmartFailoverServiceProvider extends ServiceProvider
                 Console\Commands\TestFailoverCommand::class,
             ]);
         }
-
         // Register health check routes if enabled
         if (config('smart-failover.health_check.enabled', true)) {
             $this->loadRoutesFrom(__DIR__ . '/../routes/health.php');

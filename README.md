@@ -870,7 +870,7 @@ $events = $auditLogger->getEvents([
 ```bash
 # Clone the repository
 git clone https://github.com/mirzaaghazadeh/SmartFailover.git
-cd smart-failover
+cd SmartFailover
 
 # Install dependencies
 composer install
