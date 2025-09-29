@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover;
 
@@ -9,7 +9,7 @@ use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
 use Mirzaaghazadeh\SmartFailover\Services\NotificationManager;
 use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
 
-class SmartFailover
+final class SmartFailover
 {
     protected DatabaseFailoverManager $databaseManager;
     protected CacheFailoverManager $cacheManager;

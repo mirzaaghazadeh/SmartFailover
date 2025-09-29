@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Psr\Log\LoggerInterface;
 
-class DatabaseFailoverManager
+final class DatabaseFailoverManager
 {
     protected Config $config;
     protected LoggerInterface $logger;

@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Psr\Log\LoggerInterface;
 
-class CacheFailoverManager
+final class CacheFailoverManager
 {
     protected Config $config;
     protected LoggerInterface $logger;

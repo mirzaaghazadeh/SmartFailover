@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -9,7 +9,7 @@ use Illuminate\Mail\MailManager;
 use Illuminate\Support\Facades\Mail;
 use Psr\Log\LoggerInterface;
 
-class MailFailoverManager
+final class MailFailoverManager
 {
     protected Config $config;
     protected LoggerInterface $logger;

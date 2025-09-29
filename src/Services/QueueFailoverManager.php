@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
 use Psr\Log\LoggerInterface;
 
-class QueueFailoverManager
+final class QueueFailoverManager
 {
     protected Config $config;
     protected LoggerInterface $logger;

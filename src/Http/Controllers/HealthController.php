@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Http\Controllers;
 
@@ -10,7 +10,7 @@ use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
 use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
 use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
 
-class HealthController extends Controller
+final class HealthController extends Controller
 {
     protected HealthCheckManager $healthManager;
 

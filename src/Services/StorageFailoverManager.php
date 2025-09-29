@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -8,7 +8,7 @@ use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 
-class StorageFailoverManager
+final class StorageFailoverManager
 {
     protected Config $config;
     protected LoggerInterface $logger;

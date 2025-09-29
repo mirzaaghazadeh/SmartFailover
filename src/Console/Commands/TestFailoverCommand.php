@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Console\Commands;
 
@@ -11,7 +11,7 @@ use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
 use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
 use Mirzaaghazadeh\SmartFailover\SmartFailover;
 
-class TestFailoverCommand extends Command
+final class TestFailoverCommand extends Command
 {
     /**
      * The name and signature of the console command.

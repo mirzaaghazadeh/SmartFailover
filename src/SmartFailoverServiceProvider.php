@@ -1,11 +1,11 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover;
 
 use Illuminate\Support\ServiceProvider;
 use Override;
 
-class SmartFailoverServiceProvider extends ServiceProvider
+final class SmartFailoverServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

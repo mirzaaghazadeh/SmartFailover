@@ -18,7 +18,7 @@ use Override;
  * @method static array getFailoverHistory(string $service = null, int $limit = 100)
  * @method static void clearFailoverHistory(string $service = null)
  * @method static array getServiceMetrics(string $service = null)
- * @method statifinal c void resetServiceMetrics(string $service = null)
+ * @method static void resetServiceMetrics(string $service = null)
  *
  * @see \Mirzaaghazadeh\SmartFailover\SmartFailover
  */

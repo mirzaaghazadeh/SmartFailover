@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -6,7 +6,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 
-class HealthCheckManager
+final class HealthCheckManager
 {
     protected Config $config;
     protected LoggerInterface $logger;

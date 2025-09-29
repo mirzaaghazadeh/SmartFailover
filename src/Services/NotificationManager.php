@@ -1,4 +1,4 @@
-final <?php
+<?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Psr\Log\LoggerInterface;
 
-class NotificationManager
+final class NotificationManager
 {
     protected Config $config;
     protected LoggerInterface $logger;
