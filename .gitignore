@@ -1,35 +1,60 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # Composer
-/vendor/
+vendor/
 composer.phar
-composer.lock
+composer.lock.bak
 
-# Laravel
-.env
-.env.backup
-.env.production
-storage/*.key
-Homestead.yaml
-Homestead.json
-/.vagrant
-.phpunit.result.cache
-
-# IDE
-.idea/
+# IDE & Editor files
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
+.sublime-project
+.sublime-workspace
+*.code-workspace
 
-# OS
-.DS_Store
-Thumbs.db
+# PHP CS Fixer
+.php-cs-fixer.cache
+.php_cs.cache
+.php-cs-fixer.dist.php
 
-# Testing
-/coverage/
-/.phpunit.cache
-/tests/results/
+# PHPStan
+build/
+.phpstan.cache
+phpstan.neon.dist
 
-# Node.js (for semantic-release)
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache/
+coverage/
+coverage.xml
+clover.xml
+phpunit.xml.dist
+
+# Laravel specific
+storage/logs/*.log
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.backup
+.env.production
+
+# Node.js (if using for frontend assets)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -37,7 +62,44 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 
-# Logs
+# Temporary files
+*.tmp
+*.temp
 *.log
+*.bak
+*.swp
+*.swo
 
-build/
+# OS generated files
+*.pid
+*.seed
+*.pid.lock
+Thumbs.db
+ehthumbs.db
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Additional PHP/Laravel patterns
+auth.json
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+.phpunit.result.cache
+*.cache
+*.orig
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Testing
+tests/_output/
+tests/_support/_generated/
