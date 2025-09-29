@@ -1,9 +1,21 @@
-name: Auto Tag with Semantic Release
+name: Automated Release System
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type to release'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -13,7 +25,10 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    name: Semantic Release
+    name: Automated Release
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
 
     steps:
       - name: Checkout code
@@ -22,28 +37,241 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install semantic-release and plugins
-        run: |
-          npm install -g semantic-release@22
-          npm install -g @semantic-release/changelog@6
-          npm install -g @semantic-release/git@10
-          npm install -g @semantic-release/github@9
-          npm install -g @semantic-release/commit-analyzer@11
-          npm install -g @semantic-release/release-notes-generator@12
-          npm install -g conventional-changelog-conventionalcommits@7
-
       - name: Configure Git
         run: |
-          git config --global user.name "semantic-release-bot"
-          git config --global user.email "semantic-release-bot@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Run Semantic Release
+      - name: Check if release needed
+        id: check
+        run: |
+          # Check if current commit is already tagged
+          if git describe --tags --exact-match HEAD 2>/dev/null; then
+            echo "Current commit is already tagged, skipping..."
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Get the last tag
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -n "$last_tag" ]; then
+            # Check if there are commits since last tag
+            commits_since_tag=$(git rev-list ${last_tag}..HEAD --count)
+            if [ "$commits_since_tag" -eq 0 ]; then
+              echo "No commits since last tag, skipping..."
+              echo "skip=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+          
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Analyze commits and determine version
+        id: version
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          # Get all existing tags that match semantic versioning pattern
+          existing_tags=$(git tag -l | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
+          
+          if [ -z "$existing_tags" ]; then
+            current_version="0.0.0"
+          else
+            latest_tag=$(echo "$existing_tags" | tail -n 1)
+            current_version=${latest_tag#v}
+          fi
+          
+          echo "Current version: $current_version"
+          
+          # Split version into major.minor.patch
+          IFS='.' read -r major minor patch <<< "$current_version"
+          
+          # Get commits since last tag
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$last_tag" ]; then
+            commit_range="${last_tag}..HEAD"
+          else
+            commit_range="HEAD"
+          fi
+          
+          # Analyze commit messages for semantic versioning
+          commits=$(git log $commit_range --pretty=format:"%s")
+          
+          # Determine version bump type
+          version_bump="patch"  # default
+          
+          # Check for manual override
+          if [ "${{ github.event.inputs.version_type }}" != "auto" ] && [ "${{ github.event.inputs.version_type }}" != "" ]; then
+            version_bump="${{ github.event.inputs.version_type }}"
+            echo "Manual version bump: $version_bump"
+          else
+            # Auto-detect from commit messages
+            if echo "$commits" | grep -qiE "^(feat|feature)(\(.+\))?!:|BREAKING CHANGE:|^[a-zA-Z]+(\(.+\))?!:"; then
+              version_bump="major"
+              echo "Breaking changes detected, bumping major version"
+            elif echo "$commits" | grep -qiE "^(feat|feature)(\(.+\))?:"; then
+              version_bump="minor"
+              echo "New features detected, bumping minor version"
+            elif echo "$commits" | grep -qiE "^(fix|bugfix|patch|perf|refactor|style|test|docs|chore)(\(.+\))?:"; then
+              version_bump="patch"
+              echo "Patches/fixes detected, bumping patch version"
+            else
+              # Check if we should skip release for certain commit types
+              if echo "$commits" | grep -qiE "^(ci|build|docs)(\(.+\))?:" && ! echo "$commits" | grep -qvE "^(ci|build|docs)(\(.+\))?:"; then
+                echo "Only CI/build/docs changes, skipping release"
+                echo "skip=true" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+            fi
+          fi
+          
+          # Calculate new version
+          case $version_bump in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+          esac
+          
+          new_version="${major}.${minor}.${patch}"
+          tag_name="v${new_version}"
+          
+          echo "New version: $new_version"
+          echo "Tag name: $tag_name"
+          
+          echo "version=$new_version" >> $GITHUB_OUTPUT
+          echo "tag=$tag_name" >> $GITHUB_OUTPUT
+          echo "bump_type=$version_bump" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        if: steps.check.outputs.skip == 'false' && steps.version.outputs.skip != 'true'
+        run: |
+          # Get commits since last tag
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$last_tag" ]; then
+            commit_range="${last_tag}..HEAD"
+            echo "## Changes since $last_tag" > changelog.md
+          else
+            commit_range="HEAD"
+            echo "## Initial Release" > changelog.md
+          fi
+          
+          echo "" >> changelog.md
+          
+          # Categorize commits
+          features=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^feat" --grep="^feature" --perl-regexp)
+          fixes=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^fix" --grep="^bugfix" --perl-regexp)
+          breaking=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="BREAKING CHANGE" --grep="!:" --perl-regexp)
+          performance=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^perf" --perl-regexp)
+          refactor=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^refactor" --perl-regexp)
+          docs=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^docs" --perl-regexp)
+          tests=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^test" --perl-regexp)
+          chores=$(git log $commit_range --pretty=format:"- %s (%h)" --grep="^chore" --grep="^ci" --grep="^build" --perl-regexp)
+          
+          # Add sections to changelog
+          if [ -n "$breaking" ]; then
+            echo "### 💥 Breaking Changes" >> changelog.md
+            echo "$breaking" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$features" ]; then
+            echo "### ✨ New Features" >> changelog.md
+            echo "$features" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$fixes" ]; then
+            echo "### 🐛 Bug Fixes" >> changelog.md
+            echo "$fixes" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$performance" ]; then
+            echo "### ⚡ Performance Improvements" >> changelog.md
+            echo "$performance" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$refactor" ]; then
+            echo "### ♻️ Code Refactoring" >> changelog.md
+            echo "$refactor" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$docs" ]; then
+            echo "### 📚 Documentation" >> changelog.md
+            echo "$docs" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$tests" ]; then
+            echo "### 🧪 Tests" >> changelog.md
+            echo "$tests" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          if [ -n "$chores" ]; then
+            echo "### 🔧 Maintenance" >> changelog.md
+            echo "$chores" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          # Add contributors
+          contributors=$(git log $commit_range --pretty=format:"%an" | sort | uniq | tr '\n' ', ' | sed 's/, $//')
+          if [ -n "$contributors" ]; then
+            echo "### 👥 Contributors" >> changelog.md
+            echo "Thanks to: $contributors" >> changelog.md
+            echo "" >> changelog.md
+          fi
+          
+          # Output changelog content
+          changelog_content=$(cat changelog.md)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$changelog_content" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create tag and release
+        if: steps.check.outputs.skip == 'false' && steps.version.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release
+        run: |
+          tag_name="${{ steps.version.outputs.tag }}"
+          version="${{ steps.version.outputs.version }}"
+          bump_type="${{ steps.version.outputs.bump_type }}"
+          
+          echo "Creating tag: $tag_name"
+          
+          # Create and push the tag
+          git tag "$tag_name" -m "Release $version ($bump_type)"
+          git push origin "$tag_name"
+          
+          echo "Successfully created and pushed tag: $tag_name"
+          
+          # Create GitHub release with generated changelog
+          gh release create "$tag_name" \
+            --title "Release $version" \
+            --notes "${{ steps.changelog.outputs.changelog }}" \
+            --latest
+          
+          echo "Successfully created release: $tag_name"
+
+      - name: Summary
+        if: steps.check.outputs.skip == 'false' && steps.version.outputs.skip != 'true'
+        run: |
+          echo "## 🚀 Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ steps.version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Bump Type**: ${{ steps.version.outputs.bump_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.changelog.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
