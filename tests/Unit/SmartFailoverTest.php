@@ -9,14 +9,15 @@ class SmartFailoverTest extends TestCase
 {
     protected SmartFailover $smartFailover;
 
-    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
         $this->smartFailover = app(SmartFailover::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_configure_database_failover(): void
     {
         $result = $this->smartFailover->db('mysql_primary', 'mysql_backup');
@@ -24,7 +25,9 @@ class SmartFailoverTest extends TestCase
         $this->assertInstanceOf(SmartFailover::class, $result);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_configure_cache_failover(): void
     {
         $result = $this->smartFailover->cache('redis', 'memcached');
@@ -32,7 +35,9 @@ class SmartFailoverTest extends TestCase
         $this->assertInstanceOf(SmartFailover::class, $result);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_configure_queue_failover(): void
     {
         $result = $this->smartFailover->queue('sqs', 'redis');
@@ -40,7 +45,9 @@ class SmartFailoverTest extends TestCase
         $this->assertInstanceOf(SmartFailover::class, $result);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_chain_multiple_configurations(): void
     {
         $result = $this->smartFailover
@@ -51,7 +58,9 @@ class SmartFailoverTest extends TestCase
         $this->assertInstanceOf(SmartFailover::class, $result);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_execute_callback(): void
     {
         $executed = false;
@@ -64,7 +73,9 @@ class SmartFailoverTest extends TestCase
         $this->assertTrue($executed);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_get_health_status(): void
     {
         $health = $this->smartFailover->health();
@@ -73,7 +84,9 @@ class SmartFailoverTest extends TestCase
         $this->assertArrayHasKey('status', $health);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @test
+     */
     public function it_can_reset_configuration(): void
     {
         $this->smartFailover
