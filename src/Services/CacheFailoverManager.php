@@ -1,4 +1,4 @@
-<?php
+final <?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -215,7 +215,7 @@ class CacheFailoverManager
                 $retrieved = Cache::store($store)->get($testKey);
                 Cache::store($store)->forget($testKey);
 
-                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
+                $responseTime = ((float) microtime(true) - (float) $startTime) * 1000.0;
 
                 if ($retrieved === $testValue) {
                     $results[$name] = [

@@ -1,4 +1,4 @@
-<?php
+final <?php
 
 namespace Mirzaaghazadeh\SmartFailover\Console\Commands;
 
@@ -75,8 +75,10 @@ class TestFailoverCommand extends Command
 
     /**
      * Test database failover.
+     *
+     * @param array|bool|null|string $fallback
      */
-    protected function testDatabase(?string $primary, mixed $fallback, bool $simulateFailure): int
+    protected function testDatabase(?string $primary, array|string|bool|null $fallback, bool $simulateFailure): int
     {
         $this->line('<comment>Testing Database Failover...</comment>');
 
@@ -116,8 +118,10 @@ class TestFailoverCommand extends Command
 
     /**
      * Test cache failover.
+     *
+     * @param array|bool|null|string $fallback
      */
-    protected function testCache(?string $primary, mixed $fallback, bool $simulateFailure): int
+    protected function testCache(?string $primary, array|string|bool|null $fallback, bool $simulateFailure): int
     {
         $this->line('<comment>Testing Cache Failover...</comment>');
 
@@ -164,8 +168,10 @@ class TestFailoverCommand extends Command
 
     /**
      * Test queue failover.
+     *
+     * @param array|bool|null|string $fallback
      */
-    protected function testQueue(?string $primary, mixed $fallback, bool $simulateFailure): int
+    protected function testQueue(?string $primary, array|string|bool|null $fallback, bool $simulateFailure): int
     {
         $this->line('<comment>Testing Queue Failover...</comment>');
 
@@ -182,7 +188,7 @@ class TestFailoverCommand extends Command
                 ->send(function () {
                     // Create a simple test job
                     $job = new class () {
-                        public function handle()
+                        public function handle(): void
                         {
                             // Test job logic
                         }

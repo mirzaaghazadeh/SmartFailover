@@ -1,4 +1,4 @@
-<?php
+final <?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -141,7 +141,7 @@ class HealthCheckManager
                 $retrieved = Storage::disk($disk)->get($testFile);
                 Storage::disk($disk)->delete($testFile);
 
-                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
+                $responseTime = ((float) microtime(true) - (float) $startTime) * 1000.0;
 
                 if ($retrieved === $testContent) {
                     $results[$disk] = [
@@ -192,7 +192,7 @@ class HealthCheckManager
                     throw new \Exception('Mailer configuration not found');
                 }
 
-                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
+                $responseTime = ((float) microtime(true) - (float) $startTime) * 1000.0;
 
                 $results[$mailer] = [
                     'mailer' => $mailer,

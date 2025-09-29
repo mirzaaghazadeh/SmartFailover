@@ -1,4 +1,4 @@
-<?php
+final <?php
 
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
@@ -234,7 +234,7 @@ class StorageFailoverManager
                 throw new Exception('Content verification failed');
             }
 
-            $responseTime = (float) round((microtime(true) - $startTime) * 1000, 2);
+            $responseTime = round(((float) microtime(true) - (float) $startTime) * 1000.0, 2);
 
             return [
                 'status' => 'healthy',
@@ -244,7 +244,7 @@ class StorageFailoverManager
             ];
 
         } catch (Exception $e) {
-            $responseTime = (float) round((microtime(true) - $startTime) * 1000, 2);
+            $responseTime = round(((float) microtime(true) - (float) $startTime) * 1000.0, 2);
 
             return [
                 'status' => 'unhealthy',
