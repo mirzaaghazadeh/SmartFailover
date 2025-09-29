@@ -5,7 +5,6 @@ parameters:
         - tests
     ignoreErrors:
         - '#Call to method PHPUnit\\Framework\\Assert::assertIsArray\(\) with array will always evaluate to true#'
-        - '#Call to function is_array\(\) with non-falsy-string will always evaluate to false#'
 
 includes:
     - vendor/larastan/larastan/extension.neon

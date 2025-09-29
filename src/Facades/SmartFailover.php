@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Facade;
 use Override;
 
 /**
- * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover database(string $connection = null)
- * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover cache(string $store = null)
- * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover queue(string $connection = null)
- * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover mail(string $mailer = null)
- * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover storage(string $disk = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover database(string $connection = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover cache(string $store = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover queue(string $connection = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover mail(string $mailer = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover storage(string $disk = null)
  * @method static array getHealthStatus()
  * @method static void enableService(string $service, string $connection = null)
  * @method static void disableService(string $service, string $connection = null)
@@ -20,7 +20,7 @@ use Override;
  * @method static array getServiceMetrics(string $service = null)
  * @method static void resetServiceMetrics(string $service = null)
  *
- * @see \Mirzaaghazadeh\SmartFailover\Services\SmartFailover
+ * @see \Mirzaaghazadeh\SmartFailover\SmartFailover
  */
 class SmartFailover extends Facade
 {

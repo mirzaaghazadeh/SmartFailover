@@ -99,21 +99,11 @@ class MailFailoverManager
                 if ($queue) {
                     /** @var \Illuminate\Mail\Mailer $mailer */
                     $mailer = Mail::mailer($mailerName);
-                    if (method_exists($mailer, 'queue')) {
-                        $mailer->queue($mailable, $queue);
-                    } else {
-                        // Fallback to sending immediately if queue method doesn't exist
-                        $mailer->send($mailable);
-                    }
+                    $mailer->queue($mailable, $queue);
                 } else {
                     /** @var \Illuminate\Mail\Mailer $mailer */
                     $mailer = Mail::mailer($mailerName);
-                    if (method_exists($mailer, 'queue')) {
-                        $mailer->queue($mailable);
-                    } else {
-                        // Fallback to sending immediately if queue method doesn't exist
-                        $mailer->send($mailable);
-                    }
+                    $mailer->queue($mailable);
                 }
 
                 $this->markMailerHealthy($mailerName);
