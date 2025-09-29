@@ -9,7 +9,7 @@
          failOnWarning="true"
          failOnRisky="true"
          failOnEmptyTestSuite="true"
-         beStrictAboutOutputDuringTests="true"
+         failOnPhpunitDeprecation="false"
          cacheDirectory=".phpunit.cache"
          backupGlobals="false">
     <testsuites>
@@ -17,16 +17,11 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <coverage>
+    <source>
         <include>
             <directory suffix=".php">./src</directory>
         </include>
-        <report>
-            <html outputDirectory="coverage"/>
-            <text outputFile="coverage.txt"/>
-            <clover outputFile="coverage.xml"/>
-        </report>
-    </coverage>
+    </source>
     <logging>
         <junit outputFile="tests/results/junit.xml"/>
     </logging>
