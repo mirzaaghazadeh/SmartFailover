@@ -2,7 +2,6 @@
 
 <div align="center">
 
-![Laravel SmartFailover Logo](https://via.placeholder.com/600x200/4F46E5/FFFFFF?text=Laravel+SmartFailover)
 
 **The Ultimate Laravel Package for Bulletproof Service Failover**
 
@@ -12,7 +11,7 @@
 [![Laravel Version](https://img.shields.io/badge/laravel-9%20%7C%2010%20%7C%2011-FF2D20.svg?style=for-the-badge&logo=laravel)](https://laravel.com)
 [![Total Downloads](https://img.shields.io/packagist/dt/mirzaaghazadeh/smart-failover.svg?style=for-the-badge)](https://packagist.org/packages/mirzaaghazadeh/smart-failover)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/github/actions/workflow/status/mirzaaghazadeh/smart-failover/tests.yml?style=for-the-badge&label=tests)](https://github.com/mirzaaghazadeh/smart-failover/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/mirzaaghazadeh/SmartFailover/tests.yml?style=for-the-badge&label=tests)](https://github.com/mirzaaghazadeh/SmartFailover/actions)
 
 [📖 Documentation](#-table-of-contents) • [🚀 Quick Start](#-quick-start) • [💡 Examples](#-usage-examples) • [🏥 Health Monitoring](#-health-monitoring) • [🤝 Contributing](#-contributing)
 
@@ -493,11 +492,6 @@ php artisan smart-failover:test database --simulate-failure
 
 ### 💬 **Slack Integration**
 
-<div align="center">
-
-![Slack Alert Example](https://via.placeholder.com/500x200/36C5F0/FFFFFF?text=🚨+Database+Failover+Alert)
-
-</div>
 
 ```php
 // config/smart-failover.php
@@ -859,7 +853,6 @@ $events = $auditLogger->getEvents([
 
 ### 🌟 **We Love Contributors!**
 
-[![Contributors](https://contrib.rocks/image?repo=mirzaaghazadeh/smart-failover)](https://github.com/mirzaaghazadeh/smart-failover/graphs/contributors)
 
 </div>
 
@@ -876,7 +869,7 @@ $events = $auditLogger->getEvents([
 
 ```bash
 # Clone the repository
-git clone https://github.com/mirzaaghazadeh/smart-failover.git
+git clone https://github.com/mirzaaghazadeh/SmartFailover.git
 cd smart-failover
 
 # Install dependencies
@@ -924,10 +917,10 @@ composer analyze
 
 ### 💬 **Get Help**
 
-- 📖 [Documentation](https://github.com/mirzaaghazadeh/smart-failover/wiki)
-- 🐛 [Report Issues](https://github.com/mirzaaghazadeh/smart-failover/issues)
-- 💡 [Feature Requests](https://github.com/mirzaaghazadeh/smart-failover/issues/new?template=feature_request.md)
-- 💬 [Discussions](https://github.com/mirzaaghazadeh/smart-failover/discussions)
+- 📖 [Documentation](https://github.com/mirzaaghazadeh/SmartFailover/wiki)
+- 🐛 [Report Issues](https://github.com/mirzaaghazadeh/SmartFailover/issues)
+- 💡 [Feature Requests](https://github.com/mirzaaghazadeh/SmartFailover/issues/new?template=feature_request.md)
+- 💬 [Discussions](https://github.com/mirzaaghazadeh/SmartFailover/discussions)
 
 </div>
 
@@ -948,7 +941,7 @@ composer analyze
 
 ### ⭐ **If SmartFailover helps your project, please give it a star!**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=mirzaaghazadeh/smart-failover&type=Date)](https://star-history.com/#mirzaaghazadeh/smart-failover&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=mirzaaghazadeh/SmartFailover&type=Date)](https://star-history.com/#mirzaaghazadeh/SmartFailover&Date)
 
 ---
 
