@@ -2,12 +2,12 @@
 
 namespace MirzaAghazadeh\SmartFailover;
 
-use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use Closure;
 use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
-use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
 use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
 use MirzaAghazadeh\SmartFailover\Services\NotificationManager;
-use Closure;
+use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
 
 class SmartFailover
 {
@@ -36,46 +36,46 @@ class SmartFailover
     }
 
     /**
-     * Configure database failover connections
+     * Configure database failover connections.
      */
     public function db(string $primary, string $fallback = null): self
     {
         $this->databaseConnections = [
             'primary' => $primary,
-            'fallback' => $fallback
+            'fallback' => $fallback,
         ];
 
         return $this;
     }
 
     /**
-     * Configure cache failover stores
+     * Configure cache failover stores.
      */
     public function cache(string $primary, string $fallback = null): self
     {
         $this->cacheStores = [
             'primary' => $primary,
-            'fallback' => $fallback
+            'fallback' => $fallback,
         ];
 
         return $this;
     }
 
     /**
-     * Configure queue failover connections
+     * Configure queue failover connections.
      */
     public function queue(string $primary, string $fallback = null): self
     {
         $this->queueConnections = [
             'primary' => $primary,
-            'fallback' => $fallback
+            'fallback' => $fallback,
         ];
 
         return $this;
     }
 
     /**
-     * Execute the given closure with failover protection
+     * Execute the given closure with failover protection.
      */
     public function send(Closure $callback): mixed
     {
@@ -102,7 +102,7 @@ class SmartFailover
     }
 
     /**
-     * Execute database operations with failover
+     * Execute database operations with failover.
      */
     public function database(Closure $callback): mixed
     {
@@ -110,7 +110,7 @@ class SmartFailover
     }
 
     /**
-     * Execute cache operations with failover
+     * Execute cache operations with failover.
      */
     public function cacheOperation(Closure $callback): mixed
     {
@@ -118,7 +118,7 @@ class SmartFailover
     }
 
     /**
-     * Execute queue operations with failover
+     * Execute queue operations with failover.
      */
     public function queueOperation(Closure $callback): mixed
     {
@@ -126,7 +126,19 @@ class SmartFailover
     }
 
     /**
-     * Get health status of all configured services
+     * Get health status of all configured services.
+     */
+    public function health(): array
+    {
+        return $this->healthManager->checkAll([
+            'database' => $this->databaseConnections,
+            'cache' => $this->cacheStores,
+            'queue' => $this->queueConnections,
+        ]);
+    }
+
+    /**
+     * Get health status of all configured services.
      */
     public function getHealthStatus(): array
     {
@@ -138,7 +150,7 @@ class SmartFailover
     }
 
     /**
-     * Check if a specific service is healthy
+     * Check if a specific service is healthy.
      */
     public function isHealthy(string $service): bool
     {
@@ -146,7 +158,7 @@ class SmartFailover
     }
 
     /**
-     * Reset all configurations
+     * Reset all configurations.
      */
     public function reset(): self
     {

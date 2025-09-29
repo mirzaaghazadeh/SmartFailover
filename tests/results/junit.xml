@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/Users/navid/Desktop/library/phpunit.xml" tests="7" assertions="8" errors="0" failures="0" skipped="0" time="0.186093">
+    <testsuite name="SmartFailover Test Suite" tests="7" assertions="8" errors="0" failures="0" skipped="0" time="0.186093">
+      <testsuite name="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" tests="7" assertions="8" errors="0" failures="0" skipped="0" time="0.186093">
+        <testcase name="it_can_configure_database_failover" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="19" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="1" time="0.143354"/>
+        <testcase name="it_can_get_health_status" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="67" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="2" time="0.013052"/>
+        <testcase name="it_can_reset_configuration" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="76" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="1" time="0.006158"/>
+        <testcase name="it_can_execute_operations_with_send_method" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="54" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="1" time="0.005981"/>
+        <testcase name="it_can_configure_cache_failover" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="27" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="1" time="0.005891"/>
+        <testcase name="it_can_configure_queue_failover" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="35" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="1" time="0.005889"/>
+        <testcase name="it_can_chain_multiple_configurations" file="/Users/navid/Desktop/library/tests/Unit/SmartFailoverTest.php" line="43" class="MirzaAghazadeh\SmartFailover\Tests\Unit\SmartFailoverTest" classname="MirzaAghazadeh.SmartFailover.Tests.Unit.SmartFailoverTest" assertions="1" time="0.005766"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

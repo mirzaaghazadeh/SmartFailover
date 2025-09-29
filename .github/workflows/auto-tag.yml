@@ -63,4 +63,23 @@ jobs:
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release
+        run: |
+          # Check if semantic-release would create a release
+          if semantic-release --dry-run | grep -q "There is no previous release"; then
+            echo "No previous release found, proceeding with semantic-release"
+            semantic-release
+          elif semantic-release --dry-run | grep -q "no release"; then
+            echo "No release needed based on commits"
+          else
+            # Run semantic-release and handle tag conflicts gracefully
+            semantic-release || {
+              exit_code=$?
+              if [ $exit_code -eq 1 ]; then
+                echo "Semantic-release completed with warnings or no release needed"
+                exit 0
+              else
+                echo "Semantic-release failed with exit code $exit_code"
+                exit $exit_code
+              fi
+            }
+          fi

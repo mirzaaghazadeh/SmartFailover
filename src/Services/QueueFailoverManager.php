@@ -2,12 +2,11 @@
 
 namespace MirzaAghazadeh\SmartFailover\Services;
 
-use Illuminate\Contracts\Config\Repository as Config;
-use Psr\Log\LoggerInterface;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Carbon;
-use Illuminate\Queue\QueueManager;
 use Closure;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Queue;
+use Psr\Log\LoggerInterface;
 
 class QueueFailoverManager
 {
@@ -29,7 +28,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Set queue connections for failover
+     * Set queue connections for failover.
      */
     public function setConnections(array $connections): void
     {
@@ -37,12 +36,12 @@ class QueueFailoverManager
     }
 
     /**
-     * Execute queue operation with failover
+     * Execute queue operation with failover.
      */
     public function execute(Closure $callback, array $connections = null): mixed
     {
         $connections = $connections ?? $this->connections;
-        
+
         if (empty($connections['primary'])) {
             throw new \InvalidArgumentException('Primary queue connection must be specified');
         }
@@ -82,7 +81,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Execute callback with specific queue connection
+     * Execute callback with specific queue connection.
      */
     protected function executeWithConnection(Closure $callback, string $connection): mixed
     {
@@ -96,19 +95,19 @@ class QueueFailoverManager
                 return $callback(Queue::connection($connection));
             } catch (\Exception $e) {
                 $attempts++;
-                
+
                 if ($attempts >= $maxAttempts) {
                     throw $e;
                 }
 
                 // Calculate delay with exponential backoff if enabled
-                $currentDelay = $this->exponentialBackoff 
+                $currentDelay = $this->exponentialBackoff
                     ? $delay * pow(2, $attempts - 1)
                     : $delay;
 
                 // Wait before retry
                 usleep($currentDelay * 1000);
-                
+
                 $this->logger->debug('Retrying queue operation', [
                     'connection' => $connection,
                     'attempt' => $attempts,
@@ -122,7 +121,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Push job to queue with failover
+     * Push job to queue with failover.
      */
     public function push(string $job, array $data = [], string $queue = null): mixed
     {
@@ -132,7 +131,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Push job to queue later with failover
+     * Push job to queue later with failover.
      */
     public function later(\DateTimeInterface|\DateInterval|int $delay, string $job, array $data = [], string $queue = null): mixed
     {
@@ -142,7 +141,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Bulk push jobs to queue with failover
+     * Bulk push jobs to queue with failover.
      */
     public function bulk(array $jobs, array $data = [], string $queue = null): mixed
     {
@@ -152,7 +151,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Get queue size with failover
+     * Get queue size with failover.
      */
     public function size(string $queue = null): int
     {
@@ -170,7 +169,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Check health of queue connections
+     * Check health of queue connections.
      */
     public function checkHealth(array $connections = null): array
     {
@@ -184,11 +183,11 @@ class QueueFailoverManager
 
             try {
                 $startTime = microtime(true);
-                
+
                 // Test queue connection by getting size
                 $queueConnection = Queue::connection($connection);
                 $size = $queueConnection->size();
-                
+
                 $responseTime = (microtime(true) - $startTime) * 1000;
 
                 $results[$name] = [
@@ -216,7 +215,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Check if a specific connection is healthy
+     * Check if a specific connection is healthy.
      */
     public function isConnectionHealthy(string $connection): bool
     {
@@ -224,7 +223,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Get current health status
+     * Get current health status.
      */
     public function getHealthStatus(): array
     {
@@ -232,7 +231,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Get failed jobs count
+     * Get failed jobs count.
      */
     public function getFailedJobsCount(): int
     {
@@ -251,7 +250,7 @@ class QueueFailoverManager
     }
 
     /**
-     * Retry failed jobs
+     * Retry failed jobs.
      */
     public function retryFailedJobs(array $jobIds = []): bool
     {
