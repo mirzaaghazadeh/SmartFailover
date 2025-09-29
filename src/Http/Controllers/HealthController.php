@@ -1,14 +1,15 @@
 <?php
 
-namespace Mirzaaghazadeh\SmartFailover\Http\Controllers;
+namespace MirzaAghazadeh\SmartFailover\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
-use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
-use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
-use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
-use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
+use Illuminate\Support\Carbon;
+use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
+use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
 
 class HealthController extends Controller
 {
@@ -20,13 +21,13 @@ class HealthController extends Controller
     }
 
     /**
-     * Get overall health status.
+     * Get overall health status
      */
     public function index(): JsonResponse
     {
         try {
             $health = $this->healthManager->getHealthResponse();
-
+            
             $statusCode = match ($health['status']) {
                 'healthy' => 200,
                 'degraded' => 206, // Partial Content
@@ -46,13 +47,13 @@ class HealthController extends Controller
     }
 
     /**
-     * Get detailed health status.
+     * Get detailed health status
      */
     public function detailed(): JsonResponse
     {
         try {
             $health = $this->healthManager->checkAll();
-
+            
             $statusCode = match ($health['status']) {
                 'healthy' => 200,
                 'degraded' => 206,
@@ -72,15 +73,15 @@ class HealthController extends Controller
     }
 
     /**
-     * Get database health status.
+     * Get database health status
      */
     public function database(): JsonResponse
     {
         try {
             $databaseManager = app(DatabaseFailoverManager::class);
             $health = $databaseManager->checkHealth();
-
-            $allHealthy = collect($health)->every(fn ($service) => $service['status'] === 'healthy');
+            
+            $allHealthy = collect($health)->every(fn($service) => $service['status'] === 'healthy');
             $statusCode = $allHealthy ? 200 : 503;
 
             return response()->json([
@@ -101,15 +102,15 @@ class HealthController extends Controller
     }
 
     /**
-     * Get cache health status.
+     * Get cache health status
      */
     public function cache(): JsonResponse
     {
         try {
             $cacheManager = app(CacheFailoverManager::class);
             $health = $cacheManager->checkHealth();
-
-            $allHealthy = collect($health)->every(fn ($service) => $service['status'] === 'healthy');
+            
+            $allHealthy = collect($health)->every(fn($service) => $service['status'] === 'healthy');
             $statusCode = $allHealthy ? 200 : 503;
 
             return response()->json([
@@ -130,15 +131,15 @@ class HealthController extends Controller
     }
 
     /**
-     * Get queue health status.
+     * Get queue health status
      */
     public function queue(): JsonResponse
     {
         try {
             $queueManager = app(QueueFailoverManager::class);
             $health = $queueManager->checkHealth();
-
-            $allHealthy = collect($health)->every(fn ($service) => $service['status'] === 'healthy');
+            
+            $allHealthy = collect($health)->every(fn($service) => $service['status'] === 'healthy');
             $statusCode = $allHealthy ? 200 : 503;
 
             return response()->json([
@@ -159,14 +160,14 @@ class HealthController extends Controller
     }
 
     /**
-     * Get storage health status.
+     * Get storage health status
      */
     public function storage(): JsonResponse
     {
         try {
             $health = $this->healthManager->checkAll()['services']['storage'] ?? [];
-
-            $allHealthy = collect($health)->every(fn ($service) => $service['status'] === 'healthy');
+            
+            $allHealthy = collect($health)->every(fn($service) => $service['status'] === 'healthy');
             $statusCode = $allHealthy ? 200 : 503;
 
             return response()->json([
@@ -187,14 +188,14 @@ class HealthController extends Controller
     }
 
     /**
-     * Get mail health status.
+     * Get mail health status
      */
     public function mail(): JsonResponse
     {
         try {
             $health = $this->healthManager->checkAll()['services']['mail'] ?? [];
-
-            $allHealthy = collect($health)->every(fn ($service) => $service['status'] === 'healthy');
+            
+            $allHealthy = collect($health)->every(fn($service) => $service['status'] === 'healthy');
             $statusCode = $allHealthy ? 200 : 503;
 
             return response()->json([

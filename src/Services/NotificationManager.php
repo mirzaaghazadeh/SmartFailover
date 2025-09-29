@@ -1,12 +1,12 @@
 <?php
 
-namespace Mirzaaghazadeh\SmartFailover\Services;
+namespace MirzaAghazadeh\SmartFailover\Services;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Support\Facades\Cache;
+use Psr\Log\LoggerInterface;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationManager
 {
@@ -21,7 +21,7 @@ class NotificationManager
     }
 
     /**
-     * Notify about service failure.
+     * Notify about service failure
      */
     public function notifyFailure(\Exception $exception, array $context = []): void
     {
@@ -49,7 +49,7 @@ class NotificationManager
     }
 
     /**
-     * Notify about service recovery.
+     * Notify about service recovery
      */
     public function notifyRecovery(string $service, array $context = []): void
     {
@@ -58,13 +58,13 @@ class NotificationManager
         }
 
         $message = $this->formatRecoveryMessage($service, $context);
-
+        
         // Send notifications
         $this->sendNotifications($message, $context, 'recovery');
     }
 
     /**
-     * Send notifications to all enabled channels.
+     * Send notifications to all enabled channels
      */
     protected function sendNotifications(array $message, array $context = [], string $type = 'failure'): void
     {
@@ -87,7 +87,7 @@ class NotificationManager
     }
 
     /**
-     * Send Slack notification.
+     * Send Slack notification
      */
     protected function sendSlackNotification(array $message, array $context = [], string $type = 'failure'): void
     {
@@ -144,7 +144,7 @@ class NotificationManager
     }
 
     /**
-     * Send Telegram notification.
+     * Send Telegram notification
      */
     protected function sendTelegramNotification(array $message, array $context = [], string $type = 'failure'): void
     {
@@ -165,7 +165,7 @@ class NotificationManager
             $text .= "*Time:* {$message['timestamp']}";
 
             $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
-
+            
             Http::timeout(10)->post($url, [
                 'chat_id' => $chatId,
                 'text' => $text,
@@ -184,7 +184,7 @@ class NotificationManager
     }
 
     /**
-     * Send email notification.
+     * Send email notification
      */
     protected function sendEmailNotification(array $message, array $context = [], string $type = 'failure'): void
     {
@@ -198,7 +198,7 @@ class NotificationManager
                 return;
             }
 
-            $subject = $type === 'failure'
+            $subject = $type === 'failure' 
                 ? "SmartFailover Alert: {$message['title']}"
                 : "SmartFailover Recovery: {$message['title']}";
 
@@ -220,7 +220,7 @@ class NotificationManager
     }
 
     /**
-     * Format failure message.
+     * Format failure message
      */
     protected function formatFailureMessage(\Exception $exception, array $context = []): array
     {
@@ -229,7 +229,7 @@ class NotificationManager
             'description' => "A service failure has been detected:\n\n" .
                            "Error: {$exception->getMessage()}\n" .
                            "File: {$exception->getFile()}:{$exception->getLine()}\n" .
-                           (!empty($context) ? 'Context: ' . json_encode($context, JSON_PRETTY_PRINT) : ''),
+                           (!empty($context) ? "Context: " . json_encode($context, JSON_PRETTY_PRINT) : ''),
             'service' => $context['service'] ?? 'Unknown',
             'timestamp' => now()->toISOString(),
             'severity' => 'high',
@@ -237,7 +237,7 @@ class NotificationManager
     }
 
     /**
-     * Format recovery message.
+     * Format recovery message
      */
     protected function formatRecoveryMessage(string $service, array $context = []): array
     {
@@ -245,7 +245,7 @@ class NotificationManager
             'title' => 'Service Recovery',
             'description' => "Service has recovered and is now operational:\n\n" .
                            "Service: {$service}\n" .
-                           (!empty($context) ? 'Details: ' . json_encode($context, JSON_PRETTY_PRINT) : ''),
+                           (!empty($context) ? "Details: " . json_encode($context, JSON_PRETTY_PRINT) : ''),
             'service' => $service,
             'timestamp' => now()->toISOString(),
             'severity' => 'info',
@@ -253,7 +253,7 @@ class NotificationManager
     }
 
     /**
-     * Get throttle key for exception.
+     * Get throttle key for exception
      */
     protected function getThrottleKey(\Exception $exception): string
     {
@@ -261,7 +261,7 @@ class NotificationManager
     }
 
     /**
-     * Check if notification is throttled.
+     * Check if notification is throttled
      */
     protected function isThrottled(string $throttleKey): bool
     {
@@ -273,7 +273,7 @@ class NotificationManager
     }
 
     /**
-     * Set throttle for notification.
+     * Set throttle for notification
      */
     protected function setThrottle(string $throttleKey): void
     {

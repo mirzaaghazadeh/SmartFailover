@@ -1,16 +1,3 @@
-# 1.0.0 (2025-09-28)
-
-
-### Bug Fixes
-
-* Update test workflow to handle PHP/Laravel compatibility ([fa2553b](https://github.com/mirzaaghazadeh/SmartFailover/commit/fa2553b42565e48ad105a69e79be7f81edfddcb1))
-
-
-### Features
-
-* Add comprehensive GitHub workflows and templates ([102f22b](https://github.com/mirzaaghazadeh/SmartFailover/commit/102f22bc007218bdc1f583808d7211ba7acdc3c1))
-* Initial Laravel SmartFailover package structure ([4281d18](https://github.com/mirzaaghazadeh/SmartFailover/commit/4281d18f0a723065397542b9ff18e8318300e464))
-
 # Changelog
 
 All notable changes to `laravel-smart-failover` will be documented in this file.

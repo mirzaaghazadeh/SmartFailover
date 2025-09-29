@@ -1,13 +1,15 @@
 <?php
 
-namespace Mirzaaghazadeh\SmartFailover\Services;
+namespace MirzaAghazadeh\SmartFailover\Services;
 
-use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
+use Psr\Log\LoggerInterface;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\DB;
-use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Log;
+use Closure;
 
 class DatabaseFailoverManager
 {
@@ -27,7 +29,7 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Set database connections for failover.
+     * Set database connections for failover
      */
     public function setConnections(array $connections): void
     {
@@ -35,12 +37,12 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Execute database operation with failover.
+     * Execute database operation with failover
      */
     public function execute(Closure $callback, array $connections = null): mixed
     {
         $connections = $connections ?? $this->connections;
-
+        
         if (empty($connections['primary'])) {
             throw new \InvalidArgumentException('Primary database connection must be specified');
         }
@@ -85,7 +87,7 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Execute callback with specific database connection.
+     * Execute callback with specific database connection
      */
     protected function executeWithConnection(Closure $callback, string $connection): mixed
     {
@@ -99,14 +101,14 @@ class DatabaseFailoverManager
                 return $callback();
             } catch (QueryException $e) {
                 $attempts++;
-
+                
                 if ($attempts >= $maxAttempts) {
                     throw $e;
                 }
 
                 // Wait before retry
                 usleep($this->retryDelay * 1000);
-
+                
                 $this->logger->debug('Retrying database operation', [
                     'connection' => $connection,
                     'attempt' => $attempts,
@@ -119,7 +121,7 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Handle graceful degradation when all connections fail.
+     * Handle graceful degradation when all connections fail
      */
     protected function handleGracefulDegradation(\Exception $primaryException, \Exception $fallbackException): mixed
     {
@@ -134,7 +136,7 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Check health of database connections.
+     * Check health of database connections
      */
     public function checkHealth(array $connections = null): array
     {
@@ -175,7 +177,7 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Check if a specific connection is healthy.
+     * Check if a specific connection is healthy
      */
     public function isConnectionHealthy(string $connection): bool
     {
@@ -183,7 +185,7 @@ class DatabaseFailoverManager
     }
 
     /**
-     * Get current health status.
+     * Get current health status
      */
     public function getHealthStatus(): array
     {

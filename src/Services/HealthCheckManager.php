@@ -1,6 +1,6 @@
 <?php
 
-namespace Mirzaaghazadeh\SmartFailover\Services;
+namespace MirzaAghazadeh\SmartFailover\Services;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Psr\Log\LoggerInterface;
@@ -20,7 +20,7 @@ class HealthCheckManager
     }
 
     /**
-     * Check health of all configured services.
+     * Check health of all configured services
      */
     public function checkAll(array $serviceConfigs = []): array
     {
@@ -81,7 +81,7 @@ class HealthCheckManager
     }
 
     /**
-     * Check if a specific service is healthy.
+     * Check if a specific service is healthy
      */
     public function isServiceHealthy(string $service): bool
     {
@@ -114,7 +114,7 @@ class HealthCheckManager
     }
 
     /**
-     * Check storage health.
+     * Check storage health
      */
     protected function checkStorageHealth(): array
     {
@@ -131,15 +131,15 @@ class HealthCheckManager
         foreach ($disks as $disk) {
             try {
                 $startTime = microtime(true);
-
+                
                 // Test file operations
                 $testFile = 'smart_failover_health_check_' . time() . '.txt';
                 $testContent = 'health check test';
-
+                
                 \Storage::disk($disk)->put($testFile, $testContent);
                 $retrieved = \Storage::disk($disk)->get($testFile);
                 \Storage::disk($disk)->delete($testFile);
-
+                
                 $responseTime = (microtime(true) - $startTime) * 1000;
 
                 if ($retrieved === $testContent) {
@@ -166,7 +166,7 @@ class HealthCheckManager
     }
 
     /**
-     * Check mail health.
+     * Check mail health
      */
     protected function checkMailHealth(): array
     {
@@ -183,10 +183,10 @@ class HealthCheckManager
         foreach ($mailers as $mailer) {
             try {
                 $startTime = microtime(true);
-
+                
                 // Test mailer configuration
                 $mailerConfig = $this->config->get("mail.mailers.{$mailer}");
-
+                
                 if (!$mailerConfig) {
                     throw new \Exception('Mailer configuration not found');
                 }
@@ -213,7 +213,7 @@ class HealthCheckManager
     }
 
     /**
-     * Calculate health check summary.
+     * Calculate health check summary
      */
     protected function calculateSummary(array &$results): void
     {
@@ -246,12 +246,12 @@ class HealthCheckManager
     }
 
     /**
-     * Get health check route response.
+     * Get health check route response
      */
     public function getHealthResponse(): array
     {
         $healthData = $this->checkAll();
-
+        
         return [
             'status' => $healthData['status'],
             'timestamp' => $healthData['timestamp'],
@@ -262,7 +262,7 @@ class HealthCheckManager
     }
 
     /**
-     * Get package version.
+     * Get package version
      */
     protected function getPackageVersion(): string
     {

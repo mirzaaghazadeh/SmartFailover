@@ -1,22 +1,22 @@
 <?php
 
-namespace Mirzaaghazadeh\SmartFailover\Facades;
+namespace MirzaAghazadeh\SmartFailover\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover db(string $primary, string $fallback = null)
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover cache(string $primary, string $fallback = null)
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover queue(string $primary, string $fallback = null)
+ * @method static \MirzaAghazadeh\SmartFailover\SmartFailover db(string $primary, string $fallback = null)
+ * @method static \MirzaAghazadeh\SmartFailover\SmartFailover cache(string $primary, string $fallback = null)
+ * @method static \MirzaAghazadeh\SmartFailover\SmartFailover queue(string $primary, string $fallback = null)
  * @method static mixed send(\Closure $callback)
  * @method static mixed database(\Closure $callback)
  * @method static mixed cacheOperation(\Closure $callback)
  * @method static mixed queueOperation(\Closure $callback)
  * @method static array getHealthStatus()
  * @method static bool isHealthy(string $service)
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover reset()
+ * @method static \MirzaAghazadeh\SmartFailover\SmartFailover reset()
  *
- * @see \Mirzaaghazadeh\SmartFailover\SmartFailover
+ * @see \MirzaAghazadeh\SmartFailover\SmartFailover
  */
 class SmartFailover extends Facade
 {
@@ -25,6 +25,6 @@ class SmartFailover extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return \Mirzaaghazadeh\SmartFailover\SmartFailover::class;
+        return \MirzaAghazadeh\SmartFailover\SmartFailover::class;
     }
 }

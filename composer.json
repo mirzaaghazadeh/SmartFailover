@@ -1,5 +1,5 @@
 {
-    "name": "Mirzaaghazadeh/smart-failover",
+    "name": "mirzaaghazadeh/smart-failover",
     "description": "A comprehensive Laravel package for automatic failover handling across databases, caches, queues, and other services with intelligent routing and minimal code integration.",
     "type": "library",
     "license": "MIT",

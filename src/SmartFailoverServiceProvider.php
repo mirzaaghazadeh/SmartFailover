@@ -1,13 +1,13 @@
 <?php
 
-namespace Mirzaaghazadeh\SmartFailover;
+namespace MirzaAghazadeh\SmartFailover;
 
 use Illuminate\Support\ServiceProvider;
-use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
-use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
-use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
-use Mirzaaghazadeh\SmartFailover\Services\NotificationManager;
-use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\DatabaseFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\CacheFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\QueueFailoverManager;
+use MirzaAghazadeh\SmartFailover\Services\HealthCheckManager;
+use MirzaAghazadeh\SmartFailover\Services\NotificationManager;
 
 class SmartFailoverServiceProvider extends ServiceProvider
 {
@@ -17,8 +17,7 @@ class SmartFailoverServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/smart-failover.php',
-            'smart-failover'
+            __DIR__.'/../config/smart-failover.php', 'smart-failover'
         );
 
         $this->app->singleton(SmartFailover::class, function ($app) {
@@ -59,7 +58,7 @@ class SmartFailoverServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/smart-failover.php' => config_path('smart-failover.php'),
+                __DIR__.'/../config/smart-failover.php' => config_path('smart-failover.php'),
             ], 'smart-failover-config');
 
             $this->commands([
@@ -70,7 +69,7 @@ class SmartFailoverServiceProvider extends ServiceProvider
 
         // Register health check routes if enabled
         if (config('smart-failover.health_check.enabled', true)) {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/health.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/health.php');
         }
     }
 }
