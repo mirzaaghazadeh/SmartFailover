@@ -94,7 +94,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageAliases($app): array
     {
         return [
-            'SmartFailover' => \MirzaAghazadeh\SmartFailover\Facades\SmartFailover::class,
+            'SmartFailover' => \Mirzaaghazadeh\SmartFailover\Facades\SmartFailover::class,
         ];
     }
 }
