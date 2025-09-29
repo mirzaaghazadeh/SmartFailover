@@ -2,66 +2,41 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    name: Create Release
+    name: Semantic Release
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          php-version: 8.2
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: npm ci
 
-      - name: Get tag name
-        id: tag
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Extract changelog
-        id: changelog
+      - name: Configure Git
         run: |
-          # Extract changelog for current version
-          if [ -f CHANGELOG.md ]; then
-            # Get content between current version and next version or end of file
-            awk '/^## \[?'${GITHUB_REF#refs/tags/v}'\]?/{flag=1; next} /^## \[?[0-9]/{flag=0} flag' CHANGELOG.md > release_notes.md
-            if [ ! -s release_notes.md ]; then
-              echo "No changelog found for version ${GITHUB_REF#refs/tags/v}" > release_notes.md
-            fi
-          else
-            echo "Release ${GITHUB_REF#refs/tags/}" > release_notes.md
-          fi
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          name: Release ${{ steps.tag.outputs.tag }}
-          body_path: release_notes.md
-          draft: false
-          prerelease: ${{ contains(steps.tag.outputs.tag, '-') }}
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  packagist:
-    runs-on: ubuntu-latest
-    name: Update Packagist
-    needs: release
-
-    steps:
-      - name: Update Packagist
-        run: |
-          curl -XPOST -H'content-type:application/json' \
-            'https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}' \
-            -d'{"repository":{"url":"https://github.com/${{ github.repository }}"}}'
+        run: npx semantic-release
