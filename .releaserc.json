@@ -26,15 +26,11 @@
           },
           {
             "type": "docs",
-            "release": false
+            "release": "patch"
           },
           {
             "type": "style",
-            "release": false
-          },
-          {
-            "type": "chore",
-            "release": false
+            "release": "patch"
           },
           {
             "type": "refactor",
@@ -42,15 +38,23 @@
           },
           {
             "type": "test",
-            "release": false
+            "release": "patch"
           },
           {
             "type": "build",
-            "release": false
+            "release": "patch"
           },
           {
             "type": "ci",
-            "release": false
+            "release": "patch"
+          },
+          {
+            "type": "chore",
+            "release": "patch"
+          },
+          {
+            "breaking": true,
+            "release": "major"
           }
         ]
       }
@@ -79,37 +83,31 @@
             },
             {
               "type": "docs",
-              "section": "📚 Documentation",
-              "hidden": false
+              "section": "📚 Documentation"
             },
             {
               "type": "style",
-              "section": "💎 Styles",
-              "hidden": true
-            },
-            {
-              "type": "chore",
-              "section": "🔧 Miscellaneous Chores",
-              "hidden": true
+              "section": "💎 Styles"
             },
             {
               "type": "refactor",
-              "section": "♻️ Code Refactoring"
+              "section": "📦 Code Refactoring"
             },
             {
               "type": "test",
-              "section": "✅ Tests",
-              "hidden": true
+              "section": "🚨 Tests"
             },
             {
               "type": "build",
-              "section": "🏗️ Build System",
-              "hidden": true
+              "section": "🛠 Build System"
             },
             {
               "type": "ci",
-              "section": "👷 Continuous Integration",
-              "hidden": true
+              "section": "⚙️ Continuous Integration"
+            },
+            {
+              "type": "chore",
+              "section": "♻️ Chores"
             }
           ]
         }
@@ -124,8 +122,8 @@
     [
       "@semantic-release/github",
       {
-        "successComment": false,
-        "failComment": false,
+        "successComment": "🎉 This ${issue.pull_request ? 'PR is included' : 'issue has been resolved'} in version ${nextRelease.version} :tada:",
+        "labels": false,
         "releasedLabels": false
       }
     ],

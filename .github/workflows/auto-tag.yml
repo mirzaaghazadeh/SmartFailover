@@ -1,0 +1,49 @@
+name: Auto Tag with Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Semantic Release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install semantic-release and plugins
+        run: |
+          npm install -g semantic-release@22
+          npm install -g @semantic-release/changelog@6
+          npm install -g @semantic-release/git@10
+          npm install -g @semantic-release/github@9
+          npm install -g @semantic-release/commit-analyzer@11
+          npm install -g @semantic-release/release-notes-generator@12
+          npm install -g conventional-changelog-conventionalcommits@7
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "semantic-release-bot"
+          git config --global user.email "semantic-release-bot@users.noreply.github.com"
+
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release
