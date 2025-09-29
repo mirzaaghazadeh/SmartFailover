@@ -3,8 +3,8 @@
 namespace Mirzaaghazadeh\SmartFailover\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
 use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;

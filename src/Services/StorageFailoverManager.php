@@ -177,7 +177,9 @@ class StorageFailoverManager
 
                 if ($disk->exists($path)) {
                     if (method_exists($disk, 'url')) {
-                        $url = $disk->url($path);
+                        /** @var \Illuminate\Contracts\Filesystem\Cloud $cloudDisk */
+                        $cloudDisk = $disk;
+                        $url = $cloudDisk->url($path);
                     } else {
                         // Fallback for disks that don't support URL generation
                         $url = $path;

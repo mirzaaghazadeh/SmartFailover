@@ -14,7 +14,8 @@ class SmartFailoverServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/smart-failover.php', 'smart-failover'
+            __DIR__ . '/../config/smart-failover.php',
+            'smart-failover'
         );
 
         $this->app->singleton('smart-failover', function ($app) {
