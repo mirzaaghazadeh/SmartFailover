@@ -59,7 +59,7 @@ class TestFailoverCommand extends Command
                 'cache' => $this->testCache($primary, $fallback, $simulateFailure),
                 'queue' => $this->testQueue($primary, $fallback, $simulateFailure),
                 'all' => $this->testAll($simulateFailure),
-                default => (function() use ($service) {
+                default => (function () use ($service) {
                     $this->error("Unknown service: {$service}");
                     return 1;
                 })(),
