@@ -3,6 +3,9 @@
 namespace Mirzaaghazadeh\SmartFailover\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Queue;
 use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
 use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
 use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
@@ -73,22 +76,22 @@ class TestFailoverCommand extends Command
     /**
      * Test database failover.
      */
-    protected function testDatabase(?string $primary, ?string $fallback, bool $simulateFailure): int
+    protected function testDatabase(?string $primary, mixed $fallback, bool $simulateFailure): int
     {
         $this->line('<comment>Testing Database Failover...</comment>');
 
         $primary = $primary ?: config('database.default');
-        $fallback = $fallback ?: 'mysql_backup';
+        $fallbackConnection = is_string($fallback) ? $fallback : 'mysql_backup';
 
         $this->line("Primary: {$primary}");
-        $this->line("Fallback: {$fallback}");
+        $this->line("Fallback: {$fallbackConnection}");
 
         try {
             // Test basic connection
             $this->smartFailover
-                ->db($primary, is_array($fallback) ? $fallback[0] : $fallback)
+                ->db($primary, $fallbackConnection)
                 ->send(function () {
-                    return \DB::select('SELECT 1 as test');
+                    return DB::select('SELECT 1 as test');
                 });
 
             $this->info('✓ Database failover test passed');
@@ -114,15 +117,15 @@ class TestFailoverCommand extends Command
     /**
      * Test cache failover.
      */
-    protected function testCache(?string $primary, ?string $fallback, bool $simulateFailure): int
+    protected function testCache(?string $primary, mixed $fallback, bool $simulateFailure): int
     {
         $this->line('<comment>Testing Cache Failover...</comment>');
 
         $primary = $primary ?: config('cache.default');
-        $fallback = $fallback ?: 'array';
+        $fallbackStore = is_string($fallback) ? $fallback : 'array';
 
         $this->line("Primary: {$primary}");
-        $this->line("Fallback: {$fallback}");
+        $this->line("Fallback: {$fallbackStore}");
 
         try {
             $testKey = 'smart_failover_test_' . time();
@@ -130,10 +133,10 @@ class TestFailoverCommand extends Command
 
             // Test cache operations
             $this->smartFailover
-                ->cache($primary, is_array($fallback) ? $fallback[0] : $fallback)
+                ->cache($primary, $fallbackStore)
                 ->send(function () use ($testKey, $testValue) {
-                    \Cache::put($testKey, $testValue, 60);
-                    return \Cache::get($testKey);
+                    Cache::put($testKey, $testValue, 60);
+                    return Cache::get($testKey);
                 });
 
             $this->info('✓ Cache failover test passed');
@@ -149,7 +152,7 @@ class TestFailoverCommand extends Command
             }
 
             // Cleanup
-            \Cache::forget($testKey);
+            Cache::forget($testKey);
 
             return 0;
 
@@ -162,20 +165,20 @@ class TestFailoverCommand extends Command
     /**
      * Test queue failover.
      */
-    protected function testQueue(?string $primary, ?string $fallback, bool $simulateFailure): int
+    protected function testQueue(?string $primary, mixed $fallback, bool $simulateFailure): int
     {
         $this->line('<comment>Testing Queue Failover...</comment>');
 
         $primary = $primary ?: config('queue.default');
-        $fallback = $fallback ?: 'sync';
+        $fallbackConnection = is_string($fallback) ? $fallback : 'sync';
 
         $this->line("Primary: {$primary}");
-        $this->line("Fallback: {$fallback}");
+        $this->line("Fallback: {$fallbackConnection}");
 
         try {
             // Test queue operations
             $this->smartFailover
-                ->queue($primary, is_array($fallback) ? $fallback[0] : $fallback)
+                ->queue($primary, $fallbackConnection)
                 ->send(function () {
                     // Create a simple test job
                     $job = new class () {
@@ -185,7 +188,7 @@ class TestFailoverCommand extends Command
                         }
                     };
 
-                    \Queue::push($job);
+                    Queue::push($job);
                     return true;
                 });
 

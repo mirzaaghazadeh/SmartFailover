@@ -188,7 +188,7 @@ class QueueFailoverManager
                 $queueConnection = Queue::connection($connection);
                 $size = $queueConnection->size();
 
-                $responseTime = (microtime(true) - $startTime) * 1000;
+                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
 
                 $results[$name] = [
                     'connection' => $connection,

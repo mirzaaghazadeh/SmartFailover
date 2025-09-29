@@ -3,52 +3,49 @@
 namespace Mirzaaghazadeh\SmartFailover;
 
 use Illuminate\Support\ServiceProvider;
-use Mirzaaghazadeh\SmartFailover\Services\CacheFailoverManager;
-use Mirzaaghazadeh\SmartFailover\Services\DatabaseFailoverManager;
-use Mirzaaghazadeh\SmartFailover\Services\HealthCheckManager;
-use Mirzaaghazadeh\SmartFailover\Services\NotificationManager;
-use Mirzaaghazadeh\SmartFailover\Services\QueueFailoverManager;
+use Override;
 
 class SmartFailoverServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      */
+    #[Override]
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/smart-failover.php',
-            'smart-failover'
+            __DIR__.'/../config/smart-failover.php', 'smart-failover'
         );
 
-        $this->app->singleton(SmartFailover::class, function ($app) {
+        $this->app->singleton('smart-failover', function ($app) {
             return new SmartFailover(
-                $app->make(DatabaseFailoverManager::class),
-                $app->make(CacheFailoverManager::class),
-                $app->make(QueueFailoverManager::class),
-                $app->make(HealthCheckManager::class),
-                $app->make(NotificationManager::class)
+                $app->make(Services\DatabaseFailoverManager::class),
+                $app->make(Services\CacheFailoverManager::class),
+                $app->make(Services\QueueFailoverManager::class),
+                $app->make(Services\HealthCheckManager::class),
+                $app->make(Services\NotificationManager::class)
             );
         });
 
-        $this->app->singleton(DatabaseFailoverManager::class, function ($app) {
-            return new DatabaseFailoverManager($app['config'], $app['log']);
+        // Register individual managers
+        $this->app->singleton(Services\DatabaseFailoverManager::class, function ($app) {
+            return new Services\DatabaseFailoverManager($app['config'], $app['log']);
         });
 
-        $this->app->singleton(CacheFailoverManager::class, function ($app) {
-            return new CacheFailoverManager($app['config'], $app['log']);
+        $this->app->singleton(Services\CacheFailoverManager::class, function ($app) {
+            return new Services\CacheFailoverManager($app['config'], $app['log']);
         });
 
-        $this->app->singleton(QueueFailoverManager::class, function ($app) {
-            return new QueueFailoverManager($app['config'], $app['log']);
+        $this->app->singleton(Services\QueueFailoverManager::class, function ($app) {
+            return new Services\QueueFailoverManager($app['config'], $app['log']);
         });
 
-        $this->app->singleton(HealthCheckManager::class, function ($app) {
-            return new HealthCheckManager($app['config'], $app['log']);
+        $this->app->singleton(Services\HealthCheckManager::class, function ($app) {
+            return new Services\HealthCheckManager($app['config'], $app['log']);
         });
 
-        $this->app->singleton(NotificationManager::class, function ($app) {
-            return new NotificationManager($app['config'], $app['log']);
+        $this->app->singleton(Services\NotificationManager::class, function ($app) {
+            return new Services\NotificationManager($app['config'], $app['log']);
         });
     }
 

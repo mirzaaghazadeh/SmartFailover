@@ -3,28 +3,33 @@
 namespace Mirzaaghazadeh\SmartFailover\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Override;
 
 /**
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover db(string $primary, string $fallback = null)
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover cache(string $primary, string $fallback = null)
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover queue(string $primary, string $fallback = null)
- * @method static mixed send(\Closure $callback)
- * @method static mixed database(\Closure $callback)
- * @method static mixed cacheOperation(\Closure $callback)
- * @method static mixed queueOperation(\Closure $callback)
+ * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover database(string $connection = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover cache(string $store = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover queue(string $connection = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover mail(string $mailer = null)
+ * @method static \Mirzaaghazadeh\SmartFailover\Services\SmartFailover storage(string $disk = null)
  * @method static array getHealthStatus()
- * @method static bool isHealthy(string $service)
- * @method static \Mirzaaghazadeh\SmartFailover\SmartFailover reset()
+ * @method static void enableService(string $service, string $connection = null)
+ * @method static void disableService(string $service, string $connection = null)
+ * @method static bool isServiceEnabled(string $service, string $connection = null)
+ * @method static array getFailoverHistory(string $service = null, int $limit = 100)
+ * @method static void clearFailoverHistory(string $service = null)
+ * @method static array getServiceMetrics(string $service = null)
+ * @method static void resetServiceMetrics(string $service = null)
  *
- * @see \Mirzaaghazadeh\SmartFailover\SmartFailover
+ * @see \Mirzaaghazadeh\SmartFailover\Services\SmartFailover
  */
 class SmartFailover extends Facade
 {
     /**
      * Get the registered name of the component.
      */
+    #[Override]
     protected static function getFacadeAccessor(): string
     {
-        return \Mirzaaghazadeh\SmartFailover\SmartFailover::class;
+        return 'smart-failover';
     }
 }

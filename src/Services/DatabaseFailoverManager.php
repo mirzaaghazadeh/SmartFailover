@@ -149,7 +149,7 @@ class DatabaseFailoverManager
             try {
                 $startTime = microtime(true);
                 DB::connection($connection)->select('SELECT 1');
-                $responseTime = (microtime(true) - $startTime) * 1000;
+                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
 
                 $results[$name] = [
                     'connection' => $connection,

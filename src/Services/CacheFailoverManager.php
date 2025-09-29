@@ -215,7 +215,7 @@ class CacheFailoverManager
                 $retrieved = Cache::store($store)->get($testKey);
                 Cache::store($store)->forget($testKey);
 
-                $responseTime = (microtime(true) - $startTime) * 1000;
+                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
 
                 if ($retrieved === $testValue) {
                     $results[$name] = [

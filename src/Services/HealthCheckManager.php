@@ -3,6 +3,7 @@
 namespace Mirzaaghazadeh\SmartFailover\Services;
 
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 
 class HealthCheckManager
@@ -136,11 +137,11 @@ class HealthCheckManager
                 $testFile = 'smart_failover_health_check_' . time() . '.txt';
                 $testContent = 'health check test';
 
-                \Storage::disk($disk)->put($testFile, $testContent);
-                $retrieved = \Storage::disk($disk)->get($testFile);
-                \Storage::disk($disk)->delete($testFile);
+                Storage::disk($disk)->put($testFile, $testContent);
+                $retrieved = Storage::disk($disk)->get($testFile);
+                Storage::disk($disk)->delete($testFile);
 
-                $responseTime = (microtime(true) - $startTime) * 1000;
+                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
 
                 if ($retrieved === $testContent) {
                     $results[$disk] = [
@@ -191,7 +192,7 @@ class HealthCheckManager
                     throw new \Exception('Mailer configuration not found');
                 }
 
-                $responseTime = (microtime(true) - $startTime) * 1000;
+                $responseTime = (float) ((microtime(true) - $startTime) * 1000);
 
                 $results[$mailer] = [
                     'mailer' => $mailer,

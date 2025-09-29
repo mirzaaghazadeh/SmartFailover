@@ -97,9 +97,23 @@ class MailFailoverManager
 
                 // Queue the mail
                 if ($queue) {
-                    Mail::mailer($mailerName)->queue($mailable, $queue);
+                    /** @var \Illuminate\Mail\Mailer $mailer */
+                    $mailer = Mail::mailer($mailerName);
+                    if (method_exists($mailer, 'queue')) {
+                        $mailer->queue($mailable, $queue);
+                    } else {
+                        // Fallback to sending immediately if queue method doesn't exist
+                        $mailer->send($mailable);
+                    }
                 } else {
-                    Mail::mailer($mailerName)->queue($mailable);
+                    /** @var \Illuminate\Mail\Mailer $mailer */
+                    $mailer = Mail::mailer($mailerName);
+                    if (method_exists($mailer, 'queue')) {
+                        $mailer->queue($mailable);
+                    } else {
+                        // Fallback to sending immediately if queue method doesn't exist
+                        $mailer->send($mailable);
+                    }
                 }
 
                 $this->markMailerHealthy($mailerName);
@@ -163,7 +177,7 @@ class MailFailoverManager
                 }
             }
 
-            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            $responseTime = (float) round((microtime(true) - $startTime) * 1000, 2);
 
             return [
                 'status' => 'healthy',
@@ -173,7 +187,7 @@ class MailFailoverManager
             ];
 
         } catch (Exception $e) {
-            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            $responseTime = (float) round((microtime(true) - $startTime) * 1000, 2);
 
             return [
                 'status' => 'unhealthy',

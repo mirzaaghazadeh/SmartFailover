@@ -176,7 +176,12 @@ class StorageFailoverManager
                 $disk = $this->storageManager->disk($diskName);
 
                 if ($disk->exists($path)) {
-                    $url = $disk->url($path);
+                    if (method_exists($disk, 'url')) {
+                        $url = $disk->url($path);
+                    } else {
+                        // Fallback for disks that don't support URL generation
+                        $url = $path;
+                    }
                     $this->markDiskHealthy($diskName);
                     return $url;
                 }
@@ -232,7 +237,7 @@ class StorageFailoverManager
                 throw new Exception('Content verification failed');
             }
 
-            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            $responseTime = (float) round((microtime(true) - $startTime) * 1000, 2);
 
             return [
                 'status' => 'healthy',
@@ -242,7 +247,7 @@ class StorageFailoverManager
             ];
 
         } catch (Exception $e) {
-            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            $responseTime = (float) round((microtime(true) - $startTime) * 1000, 2);
 
             return [
                 'status' => 'unhealthy',
